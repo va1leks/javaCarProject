@@ -38,13 +38,13 @@ public class InMemoryCarDAO {
         return cars.stream().filter(car -> car.getId() == id).findFirst().orElse(null);
     }
 
-    //todo
-    public Car updateCar(Car car) {
-        return null;
-    }
-
-    //todo
-    public void deleteCar(int id) {
-
-    }
+//    //todo
+//    public Car updateCar(Car car) {
+//        return null;
+//    }
+//
+//    //todo
+//    public void deleteCar(int id) {
+//
+//    }
 }
