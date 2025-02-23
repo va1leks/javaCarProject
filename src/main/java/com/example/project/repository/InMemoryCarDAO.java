@@ -14,19 +14,24 @@ public class InMemoryCarDAO {
 
     InMemoryCarDAO() {
         cars.add(Car.builder().id(1).brand("BMW").year(2005)
-                .description("").price(20000).model("X5").build());
+                .description("спортивный внедорожник премиум класса.")
+                .price(10000).model("X5").build());
 
-        cars.add(Car.builder().id(2).brand("Mrs").year(2005)
-                .description("").price(20000).model("X5").build());
+        cars.add(Car.builder().id(2).brand("RAM").year(2020)
+                .description("это первый пикап RAM, оснащенный системой настройки лаунчконтроля.")
+                .price(90000).model("1500 TRX").build());
 
-        cars.add(Car.builder().id(3).brand("Toyota").year(2005)
-                .description("").price(20000).model("Camry").build());
+        cars.add(Car.builder().id(3).brand("Toyota").year(2013)
+                .description("Надежный и комфортный седан бизнес-класса с экономичным двигателем.")
+                .price(6000).model("Camry").build());
 
-        cars.add(Car.builder().id(4).brand("Toyota").year(2005)
-                .description("").price(20000).model("X5").build());
+        cars.add(Car.builder().id(4).brand("Mercedes-Benz").year(2012)
+                .description("Элегантный седан премиум-класса с передовыми технологиями.")
+                .price(7000).model("C-class").build());
 
-        cars.add(Car.builder().id(5).brand("Toyota").year(2005)
-                .description("").price(20000).model("X5").build());
+        cars.add(Car.builder().id(5).brand("Toyota").year(2010)
+                .description("Мощный, надежный пикап, идеально подходящий для работы и бездорожья.")
+                .price(15000).model("Tundra").build());
     }
 
     public List<Car> showCars(String brand, String model) {
