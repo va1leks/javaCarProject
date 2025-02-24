@@ -7,6 +7,6 @@ public interface CarService {
 
     Car findById(int id);
 
-    public List<Car> showCars(String brand, String model);
+    List<Car> showCars(String brand, String model);
 
 }
