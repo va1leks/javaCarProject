@@ -29,7 +29,12 @@ public class CarController {
 
     @GetMapping
     public List<Car> showCarsByParameters(@RequestParam(required = false) String brand,
-                                          @RequestParam(required = false) String model) {
+                                          @RequestParam(required = false) String model)
+                                          throws CarException {
+        List<Car> cars = carService.showCars(brand, model);
+        if (cars.isEmpty()) {
+            throw new CarException(" car not found, brand , model: " + brand + ", " + model);
+        }
         return carService.showCars(brand, model);
     }
 }
