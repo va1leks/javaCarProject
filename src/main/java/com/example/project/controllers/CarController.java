@@ -33,7 +33,8 @@ public class CarController {
                                           throws CarNotFoundException {
         List<Car> cars = carService.showCars(brand, model);
         if (cars.isEmpty()) {
-            throw new CarNotFoundException(" car not found, brand , model: " + brand + ", " + model);
+            throw new CarNotFoundException(" car not found, brand , model: "
+                                            + brand + ", " + model);
         }
         return cars;
     }
