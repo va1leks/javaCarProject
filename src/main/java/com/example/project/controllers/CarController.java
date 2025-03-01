@@ -1,6 +1,6 @@
 package com.example.project.controllers;
 
-import com.example.project.exeption.CarException;
+import com.example.project.exeption.CarNotFoundException;
 import com.example.project.model.Car;
 import com.example.project.service.CarService;
 import java.util.List;
@@ -19,10 +19,10 @@ public class CarController {
     private CarService carService;
 
     @GetMapping("/{id}")
-    public Car findCarById(@PathVariable int id) throws CarException {
+    public Car findCarById(@PathVariable int id) throws CarNotFoundException {
         Car car = carService.findById(id);
         if (car == null) {
-            throw new CarException(" car not found, id: " + id);
+            throw new CarNotFoundException(" car not found, id: " + id);
         }
         return car;
     }
@@ -30,11 +30,11 @@ public class CarController {
     @GetMapping
     public List<Car> showCarsByParameters(@RequestParam(required = false) String brand,
                                           @RequestParam(required = false) String model)
-                                          throws CarException {
+                                          throws CarNotFoundException {
         List<Car> cars = carService.showCars(brand, model);
         if (cars.isEmpty()) {
-            throw new CarException(" car not found, brand , model: " + brand + ", " + model);
+            throw new CarNotFoundException(" car not found, brand , model: " + brand + ", " + model);
         }
-        return carService.showCars(brand, model);
+        return cars;
     }
 }

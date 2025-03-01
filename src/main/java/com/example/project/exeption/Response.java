@@ -2,17 +2,19 @@ package com.example.project.exeption;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
+@Getter
 @Data
-@Builder
 public class Response {
-    private String message;
 
-    public Response(String message) {
+    private String message;
+    private HttpStatus httpStatus;
+
+    public Response(HttpStatus status, String message) {
+        this.httpStatus = status;
         this.message = message;
     }
 
-    public String getMessage() {
-        return message;
-    }
 }
