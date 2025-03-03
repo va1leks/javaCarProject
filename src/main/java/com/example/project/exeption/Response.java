@@ -1,6 +1,6 @@
 package com.example.project.exeption;
 
-import lombok.Builder;
+
 import lombok.Data;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
