@@ -3,6 +3,10 @@ package com.example.project.repository;
 import com.example.project.model.Car;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.IntStream;
+
+
 import org.springframework.stereotype.Repository;
 
 
@@ -12,29 +16,10 @@ public class InMemoryCarDAO {
 
     private final List<Car> cars = new ArrayList<>();
 
-    InMemoryCarDAO() {
-        cars.add(Car.builder().id(1).brand("BMW").year(2005)
-                .description("спортивный внедорожник премиум класса.")
-                .price(10000).model("X5").build());
-
-        cars.add(Car.builder().id(2).brand("RAM").year(2020)
-                .description("это первый пикап RAM, оснащенный системой настройки лаунчконтроля.")
-                .price(90000).model("1500 TRX").build());
-
-        cars.add(Car.builder().id(3).brand("Toyota").year(2013)
-                .description("Надежный и комфортный седан бизнес-класса с экономичным двигателем.")
-                .price(6000).model("Camry").build());
-
-        cars.add(Car.builder().id(4).brand("Mercedes-Benz").year(2012)
-                .description("Элегантный седан премиум-класса с передовыми технологиями.")
-                .price(7000).model("C-class").build());
-
-        cars.add(Car.builder().id(5).brand("Toyota").year(2010)
-                .description("Мощный, надежный пикап, идеально подходящий для работы и бездорожья.")
-                .price(15000).model("Tundra").build());
+    public List<Car> showCars() {
+        return cars;
     }
-
-    public List<Car> showCars(String brand, String model) {
+    public List<Car> findCarByParam(String brand, String model, String year, int color) {
         return  cars.stream()
                 .filter(car -> brand == null || car.getBrand().equals(brand))
                 .filter(car -> model == null || car.getModel().equals(model))
@@ -42,7 +27,32 @@ public class InMemoryCarDAO {
 
     }
 
-    public Car findById(int id) {
-        return cars.stream().filter(car -> car.getId() == id).findFirst().orElse(null);
+    public Car findById(Long id) {
+        return cars.stream().filter(car -> Objects.equals(car.getId(), id)).findFirst().orElse(null);
+    }
+
+
+    public Car saveCar(Car car) {
+        cars.add(car);
+        return car;
+    }
+
+
+    public Car updateCar(Car car) {
+        int carIndex = IntStream.range(0,cars.size())
+                .filter(index -> cars.get(index).getId().equals(car.getId())).findFirst().orElse(-1);
+
+        if(carIndex > -1) {
+            cars.set(carIndex,car);
+            return car;
+        }
+        return null;
+
+    }
+
+
+    public void deleteCar(Long carId) {
+        cars.removeIf(car -> Objects.equals(car.getId(), carId));
+
     }
 }
