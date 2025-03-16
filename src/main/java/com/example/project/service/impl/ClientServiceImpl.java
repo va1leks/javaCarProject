@@ -27,6 +27,7 @@ public class ClientServiceImpl implements ClientService {
     private final ClientMapper clientMapper;
 
     @Override
+    @Transactional
     public GetClientDTO findUserById(Long id) {
         return clientMapper.toDto(clientRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("client not found")));
@@ -43,6 +44,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public Client saveUser(ClientDTO clientDto) {
         Client client = Client.builder().name(clientDto.getName())
                 .phone(clientDto.getPhone()).build();
@@ -50,6 +52,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public GetClientDTO updateUser(Client client) {
         clientRepository.findById(client.getId()).orElseThrow(()
                 -> new EntityNotFoundException("client not found"));
@@ -57,6 +60,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         clientRepository.findById(id).orElseThrow(()
                 -> new EntityNotFoundException("client not deleted"));
@@ -70,6 +74,9 @@ public class ClientServiceImpl implements ClientService {
                 -> new EntityNotFoundException("no client"));
         Car car = carRepository.findById(carId).orElseThrow(()
                 -> new EntityNotFoundException("car not found"));
+        if(client.getInterestedCars().contains(car)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Car already interested");
+        }
         car.getInterestedClients().add(client);
         carRepository.save(car);
         client.getInterestedCars().add(car);

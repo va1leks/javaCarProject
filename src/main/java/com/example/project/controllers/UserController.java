@@ -53,7 +53,7 @@ public class UserController {
         return clientService.addInterestedCar(carId, userId);
     }
 
-    @DeleteMapping("delCar/{carId})")
+    @DeleteMapping("delCar/{carId}")
     public GetClientDTO deleteInterestedCar(@PathVariable Long carId, @RequestBody Long userId) {
         return clientService.deleteInterestedCar(carId, userId);
     }

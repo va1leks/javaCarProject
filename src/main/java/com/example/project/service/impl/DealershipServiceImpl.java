@@ -27,6 +27,7 @@ public class DealershipServiceImpl implements DealershipService {
 
 
     @Override
+    @Transactional
     public GetDealershipDTO findDealershipById(Long id) {
         return dealershipMapper.toDto(dealershipRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("dealership not found")));
@@ -35,6 +36,7 @@ public class DealershipServiceImpl implements DealershipService {
 
 
     @Override
+    @Transactional
     public List<GetDealershipDTO> findAllDealerships() {
         List<Dealership> dealerships = (List<Dealership>) dealershipRepository.findAll();
         if (dealerships.isEmpty()) {
@@ -44,6 +46,7 @@ public class DealershipServiceImpl implements DealershipService {
     }
 
     @Override
+    @Transactional
     public Dealership saveDealership(DealershipDTO dealershipDto) {
         Dealership dealership = Dealership.builder().name(dealershipDto
                 .getName()).address(dealershipDto.getAddress()).build();
@@ -51,6 +54,7 @@ public class DealershipServiceImpl implements DealershipService {
     }
 
     @Override
+    @Transactional
     public GetDealershipDTO updateDealership(Dealership dealership) {
         return dealershipMapper.toDto(dealershipRepository.save(dealership));
     }
@@ -71,6 +75,7 @@ public class DealershipServiceImpl implements DealershipService {
 
 
     @Override
+    @Transactional
     public void deleteDealership(Long id) {
         dealershipRepository.deleteById(id);
     }

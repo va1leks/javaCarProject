@@ -21,20 +21,21 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 @AllArgsConstructor
 @Primary
-@Transactional
 public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
     private final CarMapper carMapper;
     private final DealershipRepository dealershipRepository;
 
-
+    @Override
+    @Transactional
     public List<GetCarDTO> getCarsByDealership(Long dealershipId) {
         return carMapper.toDtos(carRepository.findByDealershipId(dealershipId));
     }
 
 
     @Override
+    @Transactional
     public GetCarDTO findById(Long id) {
         return carMapper.toDto(carRepository.findById(id).orElseThrow(()
                 -> new ResponseStatusException(HttpStatus.NOT_FOUND, "car not found")));
@@ -59,6 +60,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional
     public GetCarDTO updateCar(Car car) {
         carRepository.findById(car.getId()).orElseThrow(()
                 -> new EntityNotFoundException("no car found"));
@@ -66,6 +68,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional
     public GetCarDTO patchCar(PatchCarDTO patchCarDto, Long id) {
         Car car = carRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("no car found"));
