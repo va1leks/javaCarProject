@@ -19,4 +19,6 @@ public interface CarService {
     GetCarDTO patchCar(PatchCarDTO car, Long id);
 
     void deleteCar(Long carId);
+
+    List<GetCarDTO> getCarsByDealership(Long dealershipId);
 }

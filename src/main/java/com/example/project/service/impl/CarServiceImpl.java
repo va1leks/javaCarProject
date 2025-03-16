@@ -28,6 +28,12 @@ public class CarServiceImpl implements CarService {
     private final CarMapper carMapper;
     private final DealershipRepository dealershipRepository;
 
+
+    public List<GetCarDTO> getCarsByDealership(Long dealershipId) {
+        return carMapper.toDtos(carRepository.findByDealershipId(dealershipId));
+    }
+
+
     @Override
     public GetCarDTO findById(Long id) {
         return carMapper.toDto(carRepository.findById(id).orElseThrow(()
