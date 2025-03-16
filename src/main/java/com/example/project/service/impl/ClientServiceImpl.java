@@ -8,9 +8,8 @@ import com.example.project.model.Client;
 import com.example.project.repository.CarRepository;
 import com.example.project.repository.ClientRepository;
 import com.example.project.service.ClientService;
-import java.util.List;
-
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
@@ -38,7 +37,7 @@ public class ClientServiceImpl implements ClientService {
     public List<GetClientDTO> findAllUsers() {
         List<Client> clients = clientRepository.findAll();
         if (clients.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Patients not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Clients not found");
         }
         return clientMapper.toDtos(clients);
     }
@@ -52,21 +51,25 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public GetClientDTO updateUser(Client client) {
-        Client client1 = clientRepository.findById(client.getId()).orElseThrow(() -> new EntityNotFoundException("client not found"));
+        Client client1 = clientRepository.findById(client.getId()).orElseThrow(()
+                -> new EntityNotFoundException("client not found"));
         return clientMapper.toDto(clientRepository.save(client));
     }
 
     @Override
     public void deleteUser(Long id) {
-        clientRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("client not found"));
+        clientRepository.findById(id).orElseThrow(()
+                -> new EntityNotFoundException("client not deleted"));
         clientRepository.deleteById(id);
     }
 
     @Override
     @Transactional
     public GetClientDTO addInterestedCar(Long carId, Long userId) {
-        Client client = clientRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("client not found"));
-        Car car = carRepository.findById(carId).orElseThrow(() -> new EntityNotFoundException("car not found"));
+        Client client = clientRepository.findById(userId).orElseThrow(()
+                -> new EntityNotFoundException("no client"));
+        Car car = carRepository.findById(carId).orElseThrow(()
+                -> new EntityNotFoundException("car not found"));
         car.getInterestedClients().add(client);
         carRepository.save(car);
         client.getInterestedCars().add(car);
@@ -76,8 +79,10 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public GetClientDTO deleteInterestedCar(Long carId, Long userId) {
-        Client client = clientRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("client not found"));;
-        Car car = carRepository.findById(carId).orElseThrow(() -> new EntityNotFoundException("car not found"));;
+        Client client = clientRepository.findById(userId).orElseThrow(()
+                -> new EntityNotFoundException("no client"));;
+        Car car = carRepository.findById(carId).orElseThrow(()
+                -> new EntityNotFoundException("no car"));;
         car.getInterestedClients().remove(client);
         carRepository.save(car);
         client.getInterestedCars().remove(car);

@@ -28,7 +28,8 @@ public class DealershipServiceImpl implements DealershipService {
 
     @Override
     public GetDealershipDTO findDealershipById(Long id) {
-        return dealershipMapper.toDto(dealershipRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("dealership not found")));
+        return dealershipMapper.toDto(dealershipRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("dealership not found")));
     }
 
 
@@ -57,8 +58,10 @@ public class DealershipServiceImpl implements DealershipService {
     @Override
     @Transactional
     public  GetDealershipDTO addCar(Long dealershipId, Long carId) {
-        Dealership dealership = dealershipRepository.findById(dealershipId).orElseThrow(() -> new EntityNotFoundException("dealership not found"));
-        Car car = carRepository.findById(carId).orElseThrow(() -> new EntityNotFoundException("car not found"));
+        Dealership dealership = dealershipRepository.findById(dealershipId)
+                .orElseThrow(() -> new EntityNotFoundException("dealership not found"));
+        Car car = carRepository.findById(carId).orElseThrow(()
+                -> new EntityNotFoundException("car not found"));
         car.setDealership(dealership);
         carRepository.save(car);
         dealership.getCars().add(car);

@@ -30,7 +30,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public GetCarDTO findById(Long id) {
-        return carMapper.toDto(carRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "cars not found")));
+        return carMapper.toDto(carRepository.findById(id).orElseThrow(()
+                -> new ResponseStatusException(HttpStatus.NOT_FOUND, "car not found")));
     }
 
     @Override
@@ -47,19 +48,21 @@ public class CarServiceImpl implements CarService {
     @Override
     @Transactional
     public GetCarDTO saveCar(CarDTO carDto) {
-        return carMapper.toDto(carRepository.save(carMapper.toEntity(carDto, dealershipRepository)));
+        return carMapper.toDto(carRepository.save(carMapper
+                .toEntity(carDto, dealershipRepository)));
     }
 
     @Override
     public GetCarDTO updateCar(Car car) {
-        Car car1 = carRepository.findById(car.getId()).orElseThrow(() -> new EntityNotFoundException("car not found"));
+        Car car1 = carRepository.findById(car.getId()).orElseThrow(()
+                -> new EntityNotFoundException("no car found"));
         return carMapper.toDto(carRepository.save(car));
     }
 
     @Override
     public GetCarDTO patchCar(PatchCarDTO patchCarDto, Long id) {
         Car car = carRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Car not found"));
+                .orElseThrow(() -> new EntityNotFoundException("no car found"));
         if (patchCarDto.getBrand() != null) {
             car.setBrand(patchCarDto.getBrand());
         }
@@ -98,7 +101,7 @@ public class CarServiceImpl implements CarService {
     @Transactional
     public void deleteCar(Long carId) {
         Car car = carRepository.findById(carId)
-                .orElseThrow(() -> new RuntimeException("Car not found"));
+                .orElseThrow(() -> new RuntimeException("car not deleted"));
         carRepository.delete(car);
     }
 }
