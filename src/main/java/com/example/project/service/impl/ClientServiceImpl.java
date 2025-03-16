@@ -51,7 +51,7 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public GetClientDTO updateUser(Client client) {
-        Client client1 = clientRepository.findById(client.getId()).orElseThrow(()
+        clientRepository.findById(client.getId()).orElseThrow(()
                 -> new EntityNotFoundException("client not found"));
         return clientMapper.toDto(clientRepository.save(client));
     }
@@ -80,9 +80,9 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public GetClientDTO deleteInterestedCar(Long carId, Long userId) {
         Client client = clientRepository.findById(userId).orElseThrow(()
-                -> new EntityNotFoundException("no client"));;
+                -> new EntityNotFoundException("no client"));
         Car car = carRepository.findById(carId).orElseThrow(()
-                -> new EntityNotFoundException("no car"));;
+                -> new EntityNotFoundException("no car"));
         car.getInterestedClients().remove(client);
         carRepository.save(car);
         client.getInterestedCars().remove(car);

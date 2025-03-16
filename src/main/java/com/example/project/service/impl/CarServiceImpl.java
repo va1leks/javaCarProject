@@ -54,7 +54,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public GetCarDTO updateCar(Car car) {
-        Car car1 = carRepository.findById(car.getId()).orElseThrow(()
+        carRepository.findById(car.getId()).orElseThrow(()
                 -> new EntityNotFoundException("no car found"));
         return carMapper.toDto(carRepository.save(car));
     }
