@@ -17,7 +17,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-logscd
+logs/
 .idea
 .mvn
 *.iws
