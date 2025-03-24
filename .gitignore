@@ -1,4 +1,7 @@
 HELP.md
+.gitattributes
+mvnw
+mvnw.cmd
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -14,7 +17,9 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
+logscd
 .idea
+.mvn
 *.iws
 *.iml
 *.ipr
