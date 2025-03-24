@@ -1,7 +1,10 @@
 package com.example.project.service.impl;
 
+import com.example.project.cache.MyCache;
 import com.example.project.dto.create.DealershipDTO;
 import com.example.project.dto.get.GetDealershipDTO;
+import com.example.project.exeption.ErrorMessages;
+import com.example.project.exeption.ResourceNotFoundException;
 import com.example.project.mappers.DealershipMapper;
 import com.example.project.model.Car;
 import com.example.project.model.Dealership;
@@ -12,6 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -24,16 +28,21 @@ public class DealershipServiceImpl implements DealershipService {
     private final DealershipRepository dealershipRepository;
     private final CarRepository carRepository;
     private final DealershipMapper dealershipMapper;
+    private final MyCache<Long, GetDealershipDTO> dealershipCache = new MyCache<>(60000);
 
-
+    @SneakyThrows
     @Override
     @Transactional
     public GetDealershipDTO findDealershipById(Long id) {
-        return dealershipMapper.toDto(dealershipRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("dealership not found")));
+        if (dealershipCache.containsKey(id)) {
+            return dealershipCache.get(id);
+        }
+        GetDealershipDTO dealershipDto = dealershipMapper.toDto(dealershipRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format(ErrorMessages.USER_NOT_FOUND, id))));
+        dealershipCache.put(id, dealershipDto);
+        return dealershipDto;
     }
-
-
 
     @Override
     @Transactional
@@ -48,36 +57,49 @@ public class DealershipServiceImpl implements DealershipService {
     @Override
     @Transactional
     public Dealership saveDealership(DealershipDTO dealershipDto) {
-        Dealership dealership = Dealership.builder().name(dealershipDto
-                .getName()).address(dealershipDto.getAddress()).build();
-        return dealershipRepository.save(dealership);
+        Dealership dealership = Dealership.builder().name(dealershipDto.getName())
+                .address(dealershipDto.getAddress()).build();
+        Dealership savedDealership = dealershipRepository.save(dealership);
+
+        dealershipCache.put(savedDealership.getId(), dealershipMapper.toDto(savedDealership));
+        return savedDealership;
     }
 
     @Override
     @Transactional
     public GetDealershipDTO updateDealership(Dealership dealership) {
-        return dealershipMapper.toDto(dealershipRepository.save(dealership));
+        Dealership updatedDealership = dealershipRepository.save(dealership);
+        GetDealershipDTO updatedDto = dealershipMapper.toDto(updatedDealership);
+
+        dealershipCache.put(updatedDealership.getId(), updatedDto);
+        return updatedDto;
     }
 
+    @SneakyThrows
     @Override
     @Transactional
-    public  GetDealershipDTO addCar(Long dealershipId, Long carId) {
+    public GetDealershipDTO addCar(Long dealershipId, Long carId) {
         Dealership dealership = dealershipRepository.findById(dealershipId)
-                .orElseThrow(() -> new EntityNotFoundException("dealership not found"));
-        Car car = carRepository.findById(carId).orElseThrow(()
-                -> new EntityNotFoundException("car not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format(ErrorMessages.DEALERSHIP_NOT_FOUND, dealershipId)));
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                String.format(ErrorMessages.USER_NOT_FOUND, carId)));
+
         car.setDealership(dealership);
         carRepository.save(car);
         dealership.getCars().add(car);
-
-        return dealershipMapper.toDto(dealershipRepository.save(dealership));
+        Dealership updatedDealership = dealershipRepository.save(dealership);
+        GetDealershipDTO updatedDto = dealershipMapper.toDto(updatedDealership);
+        dealershipCache.put(dealershipId, updatedDto);
+        return updatedDto;
     }
-
 
     @Override
     @Transactional
     public void deleteDealership(Long id) {
         dealershipRepository.deleteById(id);
+        dealershipCache.getCache().remove(id);
     }
 
     @Override
@@ -88,6 +110,9 @@ public class DealershipServiceImpl implements DealershipService {
         car.setDealership(null);
         carRepository.save(car);
         dealership.getCars().remove(carRepository.findById(carId).orElseThrow());
-        return dealershipMapper.toDto(dealershipRepository.save(dealership));
+        Dealership updatedDealership = dealershipRepository.save(dealership);
+        GetDealershipDTO updatedDto = dealershipMapper.toDto(updatedDealership);
+        dealershipCache.put(dealershipId, updatedDto);
+        return updatedDto;
     }
 }

@@ -1,6 +1,8 @@
 package com.example.project.dto.create;
 
-import com.example.project.model.Car;
+import com.example.project.constant.CarStatus;
+import com.example.project.constant.EngineType;
+import com.example.project.constant.Transmission;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -34,16 +36,16 @@ public class CarDTO {
     private  String vin;
 
     @NotNull
-    private Car.CarStatus status;
+    private CarStatus status;
 
     @NotNull
-    private Car.Transmission transmission;
+    private Transmission transmission;
 
     @NotNull
     private String color;
 
     @NotNull
-    private Car.EngineType engineType;
+    private EngineType engineType;
 
     @Nullable
     private Long dealershipId;

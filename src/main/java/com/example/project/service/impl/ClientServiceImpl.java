@@ -1,16 +1,20 @@
 package com.example.project.service.impl;
 
+import com.example.project.cache.MyCache;
 import com.example.project.dto.create.ClientDTO;
 import com.example.project.dto.get.GetClientDTO;
+import com.example.project.exeption.ConflictException;
+import com.example.project.exeption.ErrorMessages;
+import com.example.project.exeption.ResourceNotFoundException;
 import com.example.project.mappers.ClientMapper;
 import com.example.project.model.Car;
 import com.example.project.model.Client;
 import com.example.project.repository.CarRepository;
 import com.example.project.repository.ClientRepository;
 import com.example.project.service.ClientService;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,12 +29,20 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
     private final CarRepository carRepository;
     private final ClientMapper clientMapper;
+    private final MyCache<Long, GetClientDTO> clientCache = new MyCache<>(60000);
 
+    @SneakyThrows
     @Override
     @Transactional
     public GetClientDTO findUserById(Long id) {
-        return clientMapper.toDto(clientRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("client not found")));
+        if (clientCache.containsKey(id)) {
+            return clientCache.get(id);
+        }
+        GetClientDTO clientDto = clientMapper.toDto(clientRepository.findById(id)
+                .orElseThrow(() ->  new ResourceNotFoundException(
+                        String.format(ErrorMessages.USER_NOT_FOUND, id))));
+        clientCache.put(id, clientDto);
+        return clientDto;
     }
 
     @Override
@@ -48,51 +60,74 @@ public class ClientServiceImpl implements ClientService {
     public Client saveUser(ClientDTO clientDto) {
         Client client = Client.builder().name(clientDto.getName())
                 .phone(clientDto.getPhone()).build();
-        return clientRepository.save(client);
+        Client savedClient = clientRepository.save(client);
+        clientCache.put(savedClient.getId(), clientMapper.toDto(savedClient));
+        return savedClient;
     }
 
+    @SneakyThrows
     @Override
     @Transactional
     public GetClientDTO updateUser(Client client) {
         clientRepository.findById(client.getId()).orElseThrow(()
-                -> new EntityNotFoundException("client not found"));
-        return clientMapper.toDto(clientRepository.save(client));
+                -> new ResourceNotFoundException(
+                String.format(ErrorMessages.USER_NOT_FOUND, client.getId())));
+        GetClientDTO updatedClient = clientMapper.toDto(clientRepository.save(client));
+        clientCache.put(updatedClient.getId(), updatedClient);
+        return updatedClient;
     }
 
+    @SneakyThrows
     @Override
     @Transactional
     public void deleteUser(Long id) {
-        clientRepository.findById(id).orElseThrow(()
-                -> new EntityNotFoundException("client not deleted"));
-        clientRepository.deleteById(id);
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        String.format(ErrorMessages.USER_NOT_FOUND, id)));
+        for (Car car : client.getInterestedCars()) {
+            car.getInterestedClients().remove(client);
+        }
+        client.getInterestedCars().clear();
+        clientRepository.delete(client);
+        clientCache.getCache().remove(id);
     }
 
+    @SneakyThrows
     @Override
     @Transactional
     public GetClientDTO addInterestedCar(Long carId, Long userId) {
         Client client = clientRepository.findById(userId).orElseThrow(()
-                -> new EntityNotFoundException("no client"));
+                -> new ResourceNotFoundException(
+                String.format(ErrorMessages.USER_NOT_FOUND, userId)));
         Car car = carRepository.findById(carId).orElseThrow(()
-                -> new EntityNotFoundException("car not found"));
-        if(client.getInterestedCars().contains(car)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Car already interested");
+                -> new ResourceNotFoundException(
+                String.format(ErrorMessages.CAR_NOT_FOUND, carId)));
+        if (client.getInterestedCars().contains(car)) {
+            throw new ConflictException("Car already interested");
         }
         car.getInterestedClients().add(client);
         carRepository.save(car);
         client.getInterestedCars().add(car);
-        return clientMapper.toDto(clientRepository.save(client));
+        GetClientDTO updatedClient = clientMapper.toDto(clientRepository.save(client));
+        clientCache.put(updatedClient.getId(), updatedClient);
+        return updatedClient;
     }
 
+    @SneakyThrows
     @Override
     @Transactional
     public GetClientDTO deleteInterestedCar(Long carId, Long userId) {
         Client client = clientRepository.findById(userId).orElseThrow(()
-                -> new EntityNotFoundException("no client"));
+                -> new ResourceNotFoundException(
+                String.format(ErrorMessages.USER_NOT_FOUND, userId)));
         Car car = carRepository.findById(carId).orElseThrow(()
-                -> new EntityNotFoundException("no car"));
+                -> new ResourceNotFoundException(
+                String.format(ErrorMessages.USER_NOT_FOUND, carId)));
         car.getInterestedClients().remove(client);
         carRepository.save(car);
         client.getInterestedCars().remove(car);
-        return clientMapper.toDto(clientRepository.save(client));
+        GetClientDTO updatedClient = clientMapper.toDto(clientRepository.save(client));
+        clientCache.put(updatedClient.getId(), updatedClient);
+        return updatedClient;
     }
 }

@@ -1,7 +1,9 @@
 package com.example.project.dto.patch;
 
 
-import com.example.project.model.Car;
+import com.example.project.constant.CarStatus;
+import com.example.project.constant.EngineType;
+import com.example.project.constant.Transmission;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -40,16 +42,16 @@ public class PatchCarDTO {
     private String vin;
 
     @Nullable
-    private Car.CarStatus status;
+    private CarStatus status;
 
     @Nullable
-    private Car.Transmission transmission;
+    private Transmission transmission;
 
     @Nullable
     private String color;
 
     @Nullable
-    private Car.EngineType engineType;
+    private EngineType engineType;
 
     @Nullable
     private Long dealershipId;

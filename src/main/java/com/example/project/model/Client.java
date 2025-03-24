@@ -7,8 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import java.util.Set;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Entity
@@ -28,9 +30,5 @@ public class Client {
 
     @ManyToMany(mappedBy = "interestedClients", cascade = {CascadeType.DETACH,
         CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @ToString.Exclude
     private Set<Car> interestedCars;
-
-
-
 }

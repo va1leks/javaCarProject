@@ -1,5 +1,8 @@
 package com.example.project.model;
 
+import com.example.project.constant.CarStatus;
+import com.example.project.constant.EngineType;
+import com.example.project.constant.Transmission;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Data
@@ -22,6 +26,7 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,6 +38,7 @@ public class Car {
     private int mileage;
     @Column(unique = true, nullable = false)
     private  String vin;
+    @Setter
     private CarStatus status;
     private Transmission transmission;
     private String color;
@@ -51,15 +57,4 @@ public class Car {
     @ToString.Exclude
     private Dealership dealership = null;
 
-    public enum EngineType {
-        PETROL, DIESEL, ELECTRIC, HYBRID
-    }
-
-    public enum CarStatus {
-        AVAILABLE, RESERVED, SOLD
-    }
-
-    public enum Transmission {
-        MANUAL, AUTOMATIC
-    }
 }
