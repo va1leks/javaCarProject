@@ -85,12 +85,12 @@ public class CarController {
         return ResponseEntity.ok(updatedCar);
     }
 
-    @GetMapping("/by-dealership")
+    @GetMapping("/by-dealership/{dealershipId}")
     @Operation(summary = "Получить машины по ID дилерского центра",
             description = "Возвращает список машин, принадлежащих указанному дилерскому центру")
     @ApiResponse(responseCode = "200", description = "Список машин успешно получен")
     @ApiResponse(responseCode = "404", description = "Дилерский центр не найден")
-    public List<GetCarDTO> getCarsByDealership(@RequestParam Long dealershipId) {
+    public List<GetCarDTO> getCarsByDealership(@PathVariable Long dealershipId) {
         return carService.getCarsByDealership(dealershipId);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.project.cache;
 
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -28,5 +29,10 @@ public class MyCache<K, V> {
 
     public boolean containsKey(K key) {
         return cache.containsKey(key);
+    }
+
+    public void putList(List<V> values)
+    {
+
     }
 }

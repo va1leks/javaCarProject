@@ -15,14 +15,18 @@ import com.example.project.service.CarService;
 import jakarta.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 
+@Slf4j
 @Service
 @AllArgsConstructor
 @Primary
@@ -36,11 +40,17 @@ public class CarServiceImpl implements CarService {
     @Override
     @Transactional
     public List<GetCarDTO> getCarsByDealership(Long dealershipId) {
-        if (carCache.containsKey(dealershipId)) {
-            return Collections.singletonList(carCache.get(dealershipId));
+        List<GetCarDTO>  cars = carCache.getCache().values().stream()
+                .filter(car -> car.getDealershipId() != null
+                        && dealershipId.equals(car.getDealershipId().getId()))
+                .collect(Collectors.toList());
+
+        if (!cars.isEmpty()) {
+            log.info("Cache hit for Order ID: {}", dealershipId);
+            return cars;
         }
-        List<GetCarDTO> cars = carMapper.toDtos(carRepository.findByDealershipId(dealershipId));
-        carCache.put(dealershipId, (GetCarDTO) cars);
+        cars = carMapper.toDtos(carRepository.findByDealershipId(dealershipId));
+        cars.forEach(car -> carCache.put(car.getId(), car));
 
         if (cars.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
