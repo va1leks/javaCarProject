@@ -94,6 +94,10 @@ public class CarController {
     }
 
     @GetMapping("/by-dealership-name/{dealershipName}")
+    @Operation(summary = "Получить машины по названию дилерского центра",
+            description = "Возвращает список машин, принадлежащих указанному дилерскому центру")
+    @ApiResponse(responseCode = "200", description = "Список машин успешно получен")
+    @ApiResponse(responseCode = "404", description = "Дилерский центр не найден")
     public List<GetCarDTO> getCarsByName(@PathVariable String dealershipName) {
         return carService.getCarsByDealershipName(dealershipName);
     }
