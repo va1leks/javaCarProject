@@ -92,4 +92,9 @@ public class CarController {
     public List<GetCarDTO> getCarsByDealership(@PathVariable Long dealershipId) {
         return carService.getCarsByDealership(dealershipId);
     }
+
+    @GetMapping("/by-dealership-name/{dealershipName}")
+    public List<GetCarDTO> getCarsByName(@PathVariable String dealershipName) {
+        return carService.getCarsByDealershipName(dealershipName);
+    }
 }

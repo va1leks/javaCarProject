@@ -55,6 +55,34 @@ public class CarServiceImpl implements CarService {
         return cars;
     }
 
+    @Override
+    @Transactional
+    public List<GetCarDTO> getCarsByDealershipName(String dealershipName) {
+        // Сначала проверяем кэш
+        List<GetCarDTO> cars = carCache.getCache().values().stream()
+                .filter(car -> car.getDealershipId() != null
+                        && dealershipName.equalsIgnoreCase(car.getDealershipId().getName()))
+                .collect(Collectors.toList());
+
+        if (!cars.isEmpty()) {
+            log.info("Cache hit for Dealership Name: {}", dealershipName);
+            return cars;
+        }
+
+        // Если в кэше нет, ищем в БД
+        cars = carMapper.toDtos(carRepository.findByDealershipName(dealershipName));
+
+        // Обновляем кэш
+        cars.forEach(car -> carCache.put(car.getId(), car));
+
+        if (cars.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "No cars found for dealership: " + dealershipName);
+        }
+
+        return cars;
+    }
+
     @SneakyThrows
     @Override
     @Transactional
