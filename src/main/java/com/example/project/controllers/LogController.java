@@ -1,5 +1,6 @@
 package com.example.project.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.File;
 import org.springframework.core.io.FileSystemResource;
@@ -19,8 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "log Controller", description = "API для управления логами")
 public class LogController {
 
-    private static final String LOG_DIRECTORY = "logs/"; // Директория хранения логов
-
+    private static final String LOG_DIRECTORY = "logs/";
+    // Директория хранения логов
+    @Operation(summary = "Получить log файл")
     @GetMapping("/{date}")
     public ResponseEntity<Resource> getLogFile(@PathVariable String date) {
         String fileName = LOG_DIRECTORY + "application-" + date + ".log";

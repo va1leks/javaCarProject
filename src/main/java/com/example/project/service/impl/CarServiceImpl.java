@@ -45,7 +45,7 @@ public class CarServiceImpl implements CarService {
                 .collect(Collectors.toList());
 
         if (!cars.isEmpty()) {
-            log.info("Cache hit for Order ID: {}", dealershipId);
+            log.info("Cache hit for Dealership ID: {}", dealershipId);
             return cars;
         }
         cars = carMapper.toDtos(carRepository.findByDealershipId(dealershipId));
