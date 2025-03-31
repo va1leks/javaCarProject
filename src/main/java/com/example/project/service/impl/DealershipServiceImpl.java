@@ -3,8 +3,8 @@ package com.example.project.service.impl;
 import com.example.project.cache.MyCache;
 import com.example.project.dto.create.DealershipDTO;
 import com.example.project.dto.get.GetDealershipDTO;
-import com.example.project.exeption.ErrorMessages;
-import com.example.project.exeption.ResourceNotFoundException;
+import com.example.project.exception.ErrorMessages;
+import com.example.project.exception.ResourceNotFoundException;
 import com.example.project.mappers.DealershipMapper;
 import com.example.project.model.Car;
 import com.example.project.model.Dealership;
@@ -28,7 +28,7 @@ public class DealershipServiceImpl implements DealershipService {
     private final DealershipRepository dealershipRepository;
     private final CarRepository carRepository;
     private final DealershipMapper dealershipMapper;
-    private final MyCache<Long, GetDealershipDTO> dealershipCache = new MyCache<>(60000);
+    private final MyCache<Long, GetDealershipDTO> dealershipCache = new MyCache<>(60000,500);
 
     @SneakyThrows
     @Override

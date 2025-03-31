@@ -1,19 +1,18 @@
 package com.example.project.service.impl;
 
-
 import com.example.project.cache.MyCache;
 import com.example.project.dto.create.CarDTO;
 import com.example.project.dto.get.GetCarDTO;
 import com.example.project.dto.patch.PatchCarDTO;
-import com.example.project.exeption.ErrorMessages;
-import com.example.project.exeption.ResourceNotFoundException;
+import com.example.project.exception.ErrorMessages;
+import com.example.project.exception.ResourceNotFoundException;
 import com.example.project.mappers.CarMapper;
 import com.example.project.model.Car;
 import com.example.project.repository.CarRepository;
 import com.example.project.repository.DealershipRepository;
 import com.example.project.service.CarService;
 import jakarta.transaction.Transactional;
-import java.util.Collections;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +34,7 @@ public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
     private final CarMapper carMapper;
     private final DealershipRepository dealershipRepository;
-    private final MyCache<Long, GetCarDTO> carCache = new MyCache<>(60000);
+    private final MyCache<Long, GetCarDTO> carCache = new MyCache<>(60000,500);
 
     @Override
     @Transactional

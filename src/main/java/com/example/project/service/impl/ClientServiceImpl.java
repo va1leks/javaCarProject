@@ -3,9 +3,9 @@ package com.example.project.service.impl;
 import com.example.project.cache.MyCache;
 import com.example.project.dto.create.ClientDTO;
 import com.example.project.dto.get.GetClientDTO;
-import com.example.project.exeption.ConflictException;
-import com.example.project.exeption.ErrorMessages;
-import com.example.project.exeption.ResourceNotFoundException;
+import com.example.project.exception.ConflictException;
+import com.example.project.exception.ErrorMessages;
+import com.example.project.exception.ResourceNotFoundException;
 import com.example.project.mappers.ClientMapper;
 import com.example.project.model.Car;
 import com.example.project.model.Client;
@@ -29,7 +29,7 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
     private final CarRepository carRepository;
     private final ClientMapper clientMapper;
-    private final MyCache<Long, GetClientDTO> clientCache = new MyCache<>(60000);
+    private final MyCache<Long, GetClientDTO> clientCache = new MyCache<>(60000,500);
 
     @SneakyThrows
     @Override

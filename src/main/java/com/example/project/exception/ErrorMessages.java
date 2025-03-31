@@ -1,4 +1,4 @@
-package com.example.project.exeption;
+package com.example.project.exception;
 
 public class ErrorMessages {
     private ErrorMessages() {
