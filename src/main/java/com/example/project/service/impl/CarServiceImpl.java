@@ -12,10 +12,8 @@ import com.example.project.repository.CarRepository;
 import com.example.project.repository.DealershipRepository;
 import com.example.project.service.CarService;
 import jakarta.transaction.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +32,7 @@ public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
     private final CarMapper carMapper;
     private final DealershipRepository dealershipRepository;
-    private final MyCache<Long, GetCarDTO> carCache = new MyCache<>(60000,500);
+    private final MyCache<Long, GetCarDTO> carCache = new MyCache<>(60000, 500);
 
     @Override
     @Transactional

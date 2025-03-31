@@ -28,7 +28,7 @@ public class DealershipServiceImpl implements DealershipService {
     private final DealershipRepository dealershipRepository;
     private final CarRepository carRepository;
     private final DealershipMapper dealershipMapper;
-    private final MyCache<Long, GetDealershipDTO> dealershipCache = new MyCache<>(60000,500);
+    private final MyCache<Long, GetDealershipDTO> dealershipCache = new MyCache<>(60000, 500);
 
     @SneakyThrows
     @Override

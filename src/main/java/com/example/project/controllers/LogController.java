@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class LogController {
 
     private static final String LOG_DIRECTORY = "logs/";
-    // Директория хранения логов
+
     @Operation(summary = "Получить log файл")
     @GetMapping("/{date}")
     public ResponseEntity<Resource> getLogFile(@PathVariable String date) {
