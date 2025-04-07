@@ -7,9 +7,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -42,7 +40,7 @@ public class LogController {
         try (Stream<String> lines = Files.lines(logPath)) {
             filteredLines = lines
                     .filter(line -> line.startsWith(targetDate.format(LOG_DATE_FORMAT)))
-                    .collect(Collectors.toList());
+                    .toList();
         }
 
         if (filteredLines.isEmpty()) {
