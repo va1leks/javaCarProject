@@ -175,4 +175,12 @@ public class CarServiceImpl implements CarService {
         carRepository.delete(car);
         carCache.getCache().remove(carId);
     }
+
+    public List<GetCarDTO> saveAllCars(List<CarDTO> carDTOs) {
+        return carDTOs.stream()
+                .map(dto -> carMapper.toEntity(dto, dealershipRepository))  // Явная передача repository
+                .map(carRepository::save)
+                .map(carMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

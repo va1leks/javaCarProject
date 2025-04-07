@@ -101,4 +101,10 @@ public class CarController {
     public List<GetCarDTO> getCarsByName(@PathVariable String dealershipName) {
         return carService.getCarsByDealershipName(dealershipName);
     }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<List<GetCarDTO>> createCarsBulk(@RequestBody List<CarDTO> carDTOs) {
+        List<GetCarDTO> savedCars = carService.saveAllCars(carDTOs);
+        return ResponseEntity.ok(savedCars);
+    }
 }

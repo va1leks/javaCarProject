@@ -12,6 +12,8 @@ public interface CarService {
 
     GetCarDTO findById(Long id);
 
+    List<GetCarDTO> saveAllCars(List<CarDTO> carDTOs);
+
     List<GetCarDTO> showCars();
 
     GetCarDTO saveCar(CarDTO car);
