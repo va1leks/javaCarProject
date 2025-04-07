@@ -176,9 +176,9 @@ public class CarServiceImpl implements CarService {
         carCache.getCache().remove(carId);
     }
 
-    public List<GetCarDTO> saveAllCars(List<CarDTO> carDTOs) {
-        return carDTOs.stream()
-                .map(dto -> carMapper.toEntity(dto, dealershipRepository))  // Явная передача repository
+    public List<GetCarDTO> saveAllCars(List<CarDTO> carDtos) {
+        return carDtos.stream()
+                .map(dto -> carMapper.toEntity(dto, dealershipRepository))
                 .map(carRepository::save)
                 .map(carMapper::toDto)
                 .collect(Collectors.toList());

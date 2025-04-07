@@ -12,7 +12,7 @@ public interface CarService {
 
     GetCarDTO findById(Long id);
 
-    List<GetCarDTO> saveAllCars(List<CarDTO> carDTOs);
+    List<GetCarDTO> saveAllCars(List<CarDTO> carDtos);
 
     List<GetCarDTO> showCars();
 

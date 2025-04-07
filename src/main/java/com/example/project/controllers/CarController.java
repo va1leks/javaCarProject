@@ -103,8 +103,8 @@ public class CarController {
     }
 
     @PostMapping("/bulk")
-    public ResponseEntity<List<GetCarDTO>> createCarsBulk(@RequestBody List<CarDTO> carDTOs) {
-        List<GetCarDTO> savedCars = carService.saveAllCars(carDTOs);
+    public ResponseEntity<List<GetCarDTO>> createCarsBulk(@RequestBody List<CarDTO> carDtos) {
+        List<GetCarDTO> savedCars = carService.saveAllCars(carDtos);
         return ResponseEntity.ok(savedCars);
     }
 }
