@@ -181,6 +181,6 @@ public class CarServiceImpl implements CarService {
                 .map(dto -> carMapper.toEntity(dto, dealershipRepository))
                 .map(carRepository::save)
                 .map(carMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 }
