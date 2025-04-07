@@ -43,7 +43,8 @@ public class LogController {
             return ResponseEntity.noContent().build();
         }
 
-        Path tempLogFile = Files.createTempFile("logs-" + date, ".log");
+        Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"));
+        Path tempLogFile = Files.createTempFile(tempDir, "logs-" + date + "-", ".log");
         Files.write(tempLogFile, filteredLines);
 
         Resource resource = new UrlResource(tempLogFile.toUri());
