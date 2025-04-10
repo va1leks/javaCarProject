@@ -1,20 +1,18 @@
-package com.example.project.controllers;
+package com.example.demo;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import com.example.project.controllers.CarController;
 import com.example.project.dto.create.CarDTO;
 import com.example.project.dto.get.GetCarDTO;
 import com.example.project.dto.patch.PatchCarDTO;
 import com.example.project.model.Car;
 import com.example.project.service.CarService;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 class CarControllerTest {
 
