@@ -24,6 +24,10 @@ import org.mockito.MockitoAnnotations;
 
 class DealershipControllerTest {
 
+    private final String DEALERSHIP = "Test Dealership";
+    private final String DEALERSHIP_ADDRESS = "Test Location";
+
+
     @Mock
     private DealershipService dealershipService;
 
@@ -39,18 +43,18 @@ class DealershipControllerTest {
         MockitoAnnotations.openMocks(this);
 
         dealershipDto = new DealershipDTO();
-        dealershipDto.setName("Test Dealership");
-        dealershipDto.setAddress("Test Location");
+        dealershipDto.setName(DEALERSHIP);
+        dealershipDto.setAddress( DEALERSHIP_ADDRESS);
 
         dealership = new Dealership();
         dealership.setId(1L);
-        dealership.setName("Test Dealership");
-        dealership.setAddress("Test Location");
+        dealership.setName(DEALERSHIP);
+        dealership.setAddress( DEALERSHIP_ADDRESS);
 
         getDealershipDto = new GetDealershipDTO();
         getDealershipDto.setId(1L);
-        getDealershipDto.setName("Test Dealership");
-        getDealershipDto.setAddress("Test Location");
+        getDealershipDto.setName(DEALERSHIP);
+        getDealershipDto.setAddress( DEALERSHIP_ADDRESS);
     }
 
     @Test
@@ -61,8 +65,8 @@ class DealershipControllerTest {
 
         assertNotNull(response);
         assertEquals(1L, response.getId());
-        assertEquals("Test Dealership", response.getName());
-        assertEquals("Test Location", response.getAddress());
+        assertEquals(DEALERSHIP, response.getName());
+        assertEquals( DEALERSHIP_ADDRESS, response.getAddress());
         verify(dealershipService, times(1)).findDealershipById(1L);
     }
 
@@ -97,8 +101,8 @@ class DealershipControllerTest {
 
         assertNotNull(response);
         assertEquals(1L, response.getId());
-        assertEquals("Test Dealership", response.getName());
-        assertEquals("Test Location", response.getAddress());
+        assertEquals(DEALERSHIP, response.getName());
+        assertEquals( DEALERSHIP_ADDRESS, response.getAddress());
         verify(dealershipService, times(1)).saveDealership(dealershipDto);
     }
 
@@ -110,8 +114,8 @@ class DealershipControllerTest {
 
         assertNotNull(response);
         assertEquals(1L, response.getId());
-        assertEquals("Test Dealership", response.getName());
-        assertEquals("Test Location", response.getAddress());
+        assertEquals(DEALERSHIP, response.getName());
+        assertEquals( DEALERSHIP_ADDRESS, response.getAddress());
         verify(dealershipService, times(1)).updateDealership(dealership);
     }
 

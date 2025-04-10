@@ -26,6 +26,9 @@ import org.mockito.MockitoAnnotations;
 
 class UserControllerTest {
 
+    private final String CLIENT_PHONE_NUMBER = "123456789";
+    private final String CLIENT_NAME = "John Doe";
+
     @Mock
     private ClientService clientService;
 
@@ -40,19 +43,19 @@ class UserControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        clientDto = new ClientDTO("John Doe", "1234567890");
+        clientDto = new ClientDTO(CLIENT_NAME, CLIENT_PHONE_NUMBER);
 
         client = new Client();
         client.setId(1L);
-        client.setName("John Doe");
-        client.setPhone("1234567890");
+        client.setName(CLIENT_NAME);
+        client.setPhone(CLIENT_PHONE_NUMBER);
 
         Set<Long> interestedCars = new HashSet<>();
         interestedCars.add(1L);
         getClientDto = GetClientDTO.builder()
                 .id(1L)
-                .name("John Doe")
-                .phone("1234567890")
+                .name(CLIENT_NAME)
+                .phone(CLIENT_PHONE_NUMBER)
                 .interestedCars(interestedCars)
                 .build();
     }
@@ -66,7 +69,7 @@ class UserControllerTest {
         assertNotNull(response);
         assertFalse(response.isEmpty());
         assertEquals(1, response.size());
-        assertEquals("John Doe", response.get(0).getName());
+        assertEquals(CLIENT_NAME, response.get(0).getName());
         verify(clientService, times(1)).findAllUsers();
     }
 
@@ -78,8 +81,8 @@ class UserControllerTest {
 
         assertNotNull(response);
         assertEquals(1L, response.getId());
-        assertEquals("John Doe", response.getName());
-        assertEquals("1234567890", response.getPhone());
+        assertEquals(CLIENT_NAME, response.getName());
+        assertEquals(CLIENT_PHONE_NUMBER, response.getPhone());
         verify(clientService, times(1)).findUserById(1L);
     }
 
@@ -101,8 +104,8 @@ class UserControllerTest {
 
         assertNotNull(response);
         assertEquals(1L, response.getId());
-        assertEquals("John Doe", response.getName());
-        assertEquals("1234567890", response.getPhone());
+        assertEquals(CLIENT_NAME, response.getName());
+        assertEquals(CLIENT_PHONE_NUMBER, response.getPhone());
         verify(clientService, times(1)).saveUser(clientDto);
     }
 
@@ -114,8 +117,8 @@ class UserControllerTest {
 
         assertNotNull(response);
         assertEquals(1L, response.getId());
-        assertEquals("John Doe", response.getName());
-        assertEquals("1234567890", response.getPhone());
+        assertEquals(CLIENT_NAME, response.getName());
+        assertEquals(CLIENT_PHONE_NUMBER, response.getPhone());
         verify(clientService, times(1)).updateUser(client);
     }
 
