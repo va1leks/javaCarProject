@@ -24,8 +24,8 @@ import org.mockito.MockitoAnnotations;
 
 class DealershipControllerTest {
 
-    private final String DEALERSHIP = "Test Dealership";
-    private final String DEALERSHIP_ADDRESS = "Test Location";
+    private final static String DEALERSHIP = "Test Dealership";
+    private final static String DEALERSHIP_ADDRESS = "Test Location";
 
 
     @Mock

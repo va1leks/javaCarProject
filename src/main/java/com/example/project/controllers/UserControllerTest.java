@@ -26,8 +26,8 @@ import org.mockito.MockitoAnnotations;
 
 class UserControllerTest {
 
-    private final String CLIENT_PHONE_NUMBER = "123456789";
-    private final String CLIENT_NAME = "John Doe";
+    private final static String CLIENT_PHONE_NUMBER = "123456789";
+    private final static String CLIENT_NAME = "John Doe";
 
     @Mock
     private ClientService clientService;
