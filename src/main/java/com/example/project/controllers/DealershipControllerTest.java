@@ -24,7 +24,7 @@ import org.mockito.MockitoAnnotations;
 
 class DealershipControllerTest {
 
-    private static final String DEALERSHIP = "Test Dealership";
+    private static final String DEALERSHIP_NAME = "Test Dealership";
     private static final String DEALERSHIP_ADDRESS = "Test Location";
 
 
@@ -43,17 +43,17 @@ class DealershipControllerTest {
         MockitoAnnotations.openMocks(this);
 
         dealershipDto = new DealershipDTO();
-        dealershipDto.setName(DEALERSHIP);
+        dealershipDto.setName(DEALERSHIP_NAME);
         dealershipDto.setAddress( DEALERSHIP_ADDRESS);
 
         dealership = new Dealership();
         dealership.setId(1L);
-        dealership.setName(DEALERSHIP);
+        dealership.setName(DEALERSHIP_NAME);
         dealership.setAddress( DEALERSHIP_ADDRESS);
 
         getDealershipDto = new GetDealershipDTO();
         getDealershipDto.setId(1L);
-        getDealershipDto.setName(DEALERSHIP);
+        getDealershipDto.setName(DEALERSHIP_NAME);
         getDealershipDto.setAddress( DEALERSHIP_ADDRESS);
     }
 
@@ -65,7 +65,7 @@ class DealershipControllerTest {
 
         assertNotNull(response);
         assertEquals(1L, response.getId());
-        assertEquals(DEALERSHIP, response.getName());
+        assertEquals(DEALERSHIP_NAME, response.getName());
         assertEquals( DEALERSHIP_ADDRESS, response.getAddress());
         verify(dealershipService, times(1)).findDealershipById(1L);
     }
@@ -101,7 +101,7 @@ class DealershipControllerTest {
 
         assertNotNull(response);
         assertEquals(1L, response.getId());
-        assertEquals(DEALERSHIP, response.getName());
+        assertEquals(DEALERSHIP_NAME, response.getName());
         assertEquals( DEALERSHIP_ADDRESS, response.getAddress());
         verify(dealershipService, times(1)).saveDealership(dealershipDto);
     }
@@ -114,7 +114,7 @@ class DealershipControllerTest {
 
         assertNotNull(response);
         assertEquals(1L, response.getId());
-        assertEquals(DEALERSHIP, response.getName());
+        assertEquals(DEALERSHIP_NAME, response.getName());
         assertEquals( DEALERSHIP_ADDRESS, response.getAddress());
         verify(dealershipService, times(1)).updateDealership(dealership);
     }
