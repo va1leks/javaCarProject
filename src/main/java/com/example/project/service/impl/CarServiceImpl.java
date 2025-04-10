@@ -58,7 +58,7 @@ public class CarServiceImpl implements CarService {
     @Override
     @Transactional
     public List<GetCarDTO> getCarsByDealershipName(String dealershipName) {
-        // Сначала проверяем кэш
+
         List<GetCarDTO> cars = carCache.getCache().values().stream()
                 .filter(car -> car.getDealershipId() != null
                         && dealershipName.equalsIgnoreCase(car.getDealershipId().getName()))
@@ -69,10 +69,10 @@ public class CarServiceImpl implements CarService {
             return cars;
         }
 
-        // Если в кэше нет, ищем в БД
+
         cars = carMapper.toDtos(carRepository.findByDealershipName(dealershipName));
 
-        // Обновляем кэш
+
         cars.forEach(car -> carCache.put(car.getId(), car));
 
         if (cars.isEmpty()) {
@@ -173,7 +173,11 @@ public class CarServiceImpl implements CarService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format(ErrorMessages.CAR_NOT_FOUND, carId)));
         carRepository.delete(car);
-        carCache.getCache().remove(carId);
+
+        if (carCache.containsKey(car.getId())) {
+            log.info("delete car {} from cache", carId);
+            carCache.getCache().remove(carId);
+        }
     }
 
     public List<GetCarDTO> saveAllCars(List<CarDTO> carDtos) {

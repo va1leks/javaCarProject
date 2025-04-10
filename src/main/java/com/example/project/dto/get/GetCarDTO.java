@@ -4,10 +4,14 @@ import com.example.project.constant.CarStatus;
 import com.example.project.constant.EngineType;
 import com.example.project.constant.Transmission;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 public class GetCarDTO {

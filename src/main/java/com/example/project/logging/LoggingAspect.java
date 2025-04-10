@@ -32,4 +32,5 @@ public class LoggingAspect {
         log.error("Ошибка в методе {}: {}",
                 joinPoint.getSignature(), exception.getMessage(), exception);
     }
+
 }

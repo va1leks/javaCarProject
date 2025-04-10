@@ -8,9 +8,10 @@ import com.example.project.service.CarService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/cars")
 @AllArgsConstructor
 @Tag(name = "Car Controller", description = "API для управления машинами")
+@Slf4j
 public class CarController {
 
     private CarService carService;
@@ -36,6 +38,7 @@ public class CarController {
     @ApiResponse(responseCode = "200", description = "Машина найдена")
     @ApiResponse(responseCode = "404", description = "Машина не найдена")
     public GetCarDTO findCarById(@PathVariable Long id) {
+
         return carService.findById(id);
     }
 
@@ -43,6 +46,7 @@ public class CarController {
     @Operation(summary = "Получить все машины", description = "Возвращает список всех машин")
     @ApiResponse(responseCode = "200", description = "Список машин успешно получен")
     public List<GetCarDTO> findAllCars() {
+
         return carService.showCars();
     }
 
@@ -50,7 +54,7 @@ public class CarController {
     @Operation(summary = "Создать профиль машины", description = "Создает новый профиль машины")
     @ApiResponse(responseCode = "201", description = "Профиль машины успешно создан")
     @ApiResponse(responseCode = "400", description = "Некорректные данные")
-    public GetCarDTO saveCar(@RequestBody CarDTO car) {
+    public GetCarDTO saveCar(@Valid @RequestBody CarDTO car) {
         return carService.saveCar(car);
     }
 
@@ -78,10 +82,9 @@ public class CarController {
     @ApiResponse(responseCode = "200", description = "Машина успешно обновлена")
     @ApiResponse(responseCode = "400", description = "Некорректные данные")
     @ApiResponse(responseCode = "404", description = "Машина не найдена")
-    public ResponseEntity<GetCarDTO> patchCar(@PathVariable Long id,
+    public GetCarDTO patchCar(@PathVariable Long id,
                                               @RequestBody PatchCarDTO patchCarDto) {
-        GetCarDTO updatedCar = carService.patchCar(patchCarDto, id);
-        return ResponseEntity.ok(updatedCar);
+        return carService.patchCar(patchCarDto, id);
     }
 
     @GetMapping("/by-dealership/{dealershipId}")
@@ -103,8 +106,7 @@ public class CarController {
     }
 
     @PostMapping("/bulk")
-    public ResponseEntity<List<GetCarDTO>> createCarsBulk(@RequestBody List<CarDTO> carDtos) {
-        List<GetCarDTO> savedCars = carService.saveAllCars(carDtos);
-        return ResponseEntity.ok(savedCars);
+    public List<GetCarDTO> createCarsBulk(@RequestBody List<CarDTO> carDtos) {
+        return carService.saveAllCars(carDtos);
     }
 }

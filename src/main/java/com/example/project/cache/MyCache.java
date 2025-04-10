@@ -2,7 +2,6 @@ package com.example.project.cache;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -18,16 +17,17 @@ public class MyCache<K, V> {
     private final int maxSize;
 
     public MyCache() {
-        this(60000, 1000); // Дефолтные значения: 60 сек, 1000 элементов
+        this(60000, 1000);
     }
 
     public MyCache(long maxAgeInMillis, int maxSize) {
         this.maxAgeInMillis = maxAgeInMillis;
         this.maxSize = maxSize;
-        this.cache = new LinkedHashMap<K, V>(maxSize, 0.75f, true) {
+        this.cache = new LinkedHashMap<>(maxSize, 0.75f, true) {
             @Override
             protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
                 boolean shouldRemove = size() > maxSize;
+
                 if (shouldRemove) {
                     log.info("Removing eldest entry: {}={} (Cache size: {})",
                             eldest.getKey(), eldest.getValue(), size());
@@ -66,10 +66,7 @@ public class MyCache<K, V> {
         return size;
     }
 
-    public synchronized void clear() {
-        cache.clear();
-        log.info("Cache cleared");
-    }
+
 
     public synchronized boolean containsKey(K key) {
         boolean contains = cache.containsKey(key);

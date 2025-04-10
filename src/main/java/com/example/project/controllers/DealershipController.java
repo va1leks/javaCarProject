@@ -7,6 +7,7 @@ import com.example.project.service.DealershipService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,7 +51,7 @@ public class DealershipController {
             description = "Создает новый дилерский центр")
     @ApiResponse(responseCode = "201", description = "Дилерский центр успешно создан")
     @ApiResponse(responseCode = "400", description = "Некорректные данные")
-    public Dealership createDealership(@RequestBody DealershipDTO dealership) {
+    public Dealership createDealership(@Valid @RequestBody DealershipDTO dealership) {
         return dealershipService.saveDealership(dealership);
     }
 

@@ -7,6 +7,7 @@ import com.example.project.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,7 +49,7 @@ public class UserController {
             description = "Создает нового пользователя")
     @ApiResponse(responseCode = "201", description = "Пользователь успешно создан")
     @ApiResponse(responseCode = "400", description = "Некорректные данные")
-    public Client createUser(@RequestBody ClientDTO client) {
+    public Client createUser(@Valid @RequestBody ClientDTO client) {
         return clientService.saveUser(client);
     }
 
