@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage()));
-        log.error("Ошибка валидации:", ex);
+        log.error("Ошибка валидации: {}", errors, ex);
         return new ResponseEntity<>(new ValidError(HttpStatus.BAD_REQUEST, errors),
                 HttpStatus.BAD_REQUEST);
     }

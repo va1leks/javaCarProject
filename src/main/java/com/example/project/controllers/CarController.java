@@ -38,7 +38,6 @@ public class CarController {
     @ApiResponse(responseCode = "200", description = "Машина найдена")
     @ApiResponse(responseCode = "404", description = "Машина не найдена")
     public GetCarDTO findCarById(@PathVariable Long id) {
-
         return carService.findById(id);
     }
 
@@ -46,7 +45,6 @@ public class CarController {
     @Operation(summary = "Получить все машины", description = "Возвращает список всех машин")
     @ApiResponse(responseCode = "200", description = "Список машин успешно получен")
     public List<GetCarDTO> findAllCars() {
-
         return carService.showCars();
     }
 
