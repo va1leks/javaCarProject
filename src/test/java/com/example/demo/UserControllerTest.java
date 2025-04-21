@@ -64,7 +64,7 @@ class UserControllerTest {
         assertNotNull(response);
         assertFalse(response.isEmpty());
         assertEquals(1, response.size());
-        assertEquals(CLIENT_NAME, response.get(0).getName());
+        assertEquals(CLIENT_NAME, response.getFirst().getName());
         verify(clientService, times(1)).findAllUsers();
     }
 
