@@ -183,7 +183,7 @@ class CarServiceTest {
     }
 
     @Test
-    void testFindById_ThrowsException() {
+    void testFindByIdThrowsException() {
         when(carRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> carService.findById(99L));
@@ -216,14 +216,14 @@ class CarServiceTest {
     }
 
     @Test
-    void testPatchCar_ThrowsException() {
+    void testPatchCarThrowsException() {
         when(carRepository.findById(2L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> carService.patchCar(new PatchCarDTO(), 2L));
     }
 
     @Test
-    void testUpdateCar_ThrowsException() {
+    void testUpdateCarThrowsException() {
         when(carRepository.findById(2L)).thenReturn(Optional.empty());
 
         Car updatedCar = car;
@@ -233,7 +233,7 @@ class CarServiceTest {
     }
 
     @Test
-    void testDeleteCar_ThrowsException() {
+    void testDeleteCarThrowsException() {
         when(carRepository.findById(5L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> carService.deleteCar(5L));

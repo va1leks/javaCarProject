@@ -57,7 +57,7 @@ class DealershipServiceTest {
 
 
     @Test
-    void testFindDealershipById_NotCached() {
+    void testFindDealershipByIdNotCached() {
         when(dealershipRepository.findById(1L)).thenReturn(Optional.of(dealership));
         when(dealershipMapper.toDto(dealership)).thenReturn(getDealershipDTO);
 
@@ -67,7 +67,7 @@ class DealershipServiceTest {
     }
 
     @Test
-    void testFindDealershipById_NotFound() {
+    void testFindDealershipByIdNotFound() {
         when(dealershipRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> dealershipService.findDealershipById(99L));
@@ -84,7 +84,7 @@ class DealershipServiceTest {
     }
 
     @Test
-    void testFindAllDealerships_Empty() {
+    void testFindAllDealershipsEmpty() {
         when(dealershipRepository.findAll()).thenReturn(Collections.emptyList());
 
         assertThrows(EntityNotFoundException.class, () -> dealershipService.findAllDealerships());
@@ -133,7 +133,7 @@ class DealershipServiceTest {
     }
 
     @Test
-    void testAddCar_CarNotFound() {
+    void testAddCarCarNotFound() {
         when(dealershipRepository.findById(1L)).thenReturn(Optional.of(dealership));
         when(carRepository.findById(2L)).thenReturn(Optional.empty());
 

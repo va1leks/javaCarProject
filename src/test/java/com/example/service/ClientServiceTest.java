@@ -138,7 +138,7 @@ class ClientServiceTest {
     }
 
     @Test
-    void testAddInterestedCar_ThrowsConflict() {
+    void testAddInterestedCarThrowsConflict() {
         Long clientId = 1L, carId = 2L;
 
         Car car = Car.builder()
@@ -183,7 +183,7 @@ class ClientServiceTest {
         assertEquals(clientId, result.getId());
     }
     @Test
-    void testAddInterestedCar_ThrowsCarNotFound() {
+    void testAddInterestedCarThrowsCarNotFound() {
         Long clientId = 1L, carId = 2L;
 
         Client client = Client.builder()
@@ -198,13 +198,13 @@ class ClientServiceTest {
     }
 
     @Test
-    void testDeleteInterestedCar_ThrowsClientNotFound() {
+    void testDeleteInterestedCarThrowsClientNotFound() {
         Long clientId = 1L, carId = 2L;
         when(clientRepository.findById(clientId)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> clientService.deleteInterestedCar(carId, clientId));
     }
     @Test
-    void testDeleteInterestedCar_ThrowsCarNotFound() {
+    void testDeleteInterestedCarThrowsCarNotFound() {
         Long clientId = 1L, carId = 2L;
 
         Client client = Client.builder()
