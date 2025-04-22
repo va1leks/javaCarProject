@@ -29,7 +29,7 @@ public class ClientServiceImpl implements ClientService {
     private final ClientRepository clientRepository;
     private final CarRepository carRepository;
     private final ClientMapper clientMapper;
-    private final MyCache<Long, GetClientDTO> clientCache = new MyCache<>(60000, 500);
+    public final MyCache<Long, GetClientDTO> clientCache = new MyCache<>(60000, 500);
 
     @SneakyThrows
     @Override
