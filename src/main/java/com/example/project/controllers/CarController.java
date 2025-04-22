@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -70,8 +71,9 @@ public class CarController {
             description = "Удаляет машину по ID")
     @ApiResponse(responseCode = "204", description = "Машина успешно удалена")
     @ApiResponse(responseCode = "404", description = "Машина не найдена")
-    public void deleteCar(@PathVariable Long carId) {
+    public ResponseEntity<String> deleteCar(@PathVariable Long carId) {
         carService.deleteCar(carId);
+        return ResponseEntity.ok("Машина с ID " + carId + " успешно удалена");
     }
 
     @PatchMapping("/{id}")

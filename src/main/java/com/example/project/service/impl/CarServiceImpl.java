@@ -176,7 +176,6 @@ public class CarServiceImpl implements CarService {
 
         if (carCache.containsKey(car.getId())) {
             log.info("delete car {} from cache", carId);
-            carCache.getCache().remove(carId);
         }
     }
 
