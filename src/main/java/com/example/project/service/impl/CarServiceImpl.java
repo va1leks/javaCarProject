@@ -58,7 +58,6 @@ public class CarServiceImpl implements CarService {
     @Override
     @Transactional
     public List<GetCarDTO> getCarsByDealershipName(String dealershipName) {
-
         List<GetCarDTO> cars = carCache.getCache().values().stream()
                 .filter(car -> car.getDealershipId() != null
                         && dealershipName.equalsIgnoreCase(car.getDealershipId().getName()))
@@ -68,11 +67,7 @@ public class CarServiceImpl implements CarService {
             log.info("Cache hit for Dealership Name: {}", dealershipName);
             return cars;
         }
-
-
         cars = carMapper.toDtos(carRepository.findByDealershipName(dealershipName));
-
-
         cars.forEach(car -> carCache.put(car.getId(), car));
 
         if (cars.isEmpty()) {
