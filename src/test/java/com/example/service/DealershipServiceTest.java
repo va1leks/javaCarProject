@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.project.cache.MyCache;
 import com.example.project.dto.create.DealershipDTO;
 import com.example.project.dto.get.GetDealershipDTO;
 import com.example.project.exception.ResourceNotFoundException;
@@ -13,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -163,5 +165,32 @@ class DealershipServiceTest {
         GetDealershipDTO result = dealershipService.deleteCar(1L, 2L);
 
         assertEquals(getDealershipDTO.getId(), result.getId());
+    }
+
+    @Test
+
+    void testFindDealershipById_CacheHit() throws Exception {
+        GetDealershipDTO cachedDealership = GetDealershipDTO.builder()
+                .id(1L)
+                .name("TestDealer")
+                .address("Main St")
+                .build();
+
+        Field field = DealershipServiceImpl.class.getDeclaredField("dealershipCache");
+        field.setAccessible(true);
+        @SuppressWarnings("unchecked")
+        MyCache<Long, GetDealershipDTO> cache = (MyCache<Long, GetDealershipDTO>) field.get(dealershipService);
+        cache.put(1L, cachedDealership);
+
+        GetDealershipDTO result = dealershipService.findDealershipById(1L);
+
+        assertEquals(cachedDealership.getId(), result.getId());
+        assertEquals(cachedDealership.getName(), result.getName());
+    }
+    @Test
+    void testFindDealershipById_NotFound() {
+        when(dealershipRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> dealershipService.findDealershipById(99L));
     }
 }

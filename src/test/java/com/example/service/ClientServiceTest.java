@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.project.cache.MyCache;
 import com.example.project.dto.create.ClientDTO;
 import com.example.project.dto.get.GetClientDTO;
 import com.example.project.exception.ConflictException;
@@ -9,6 +10,8 @@ import com.example.project.model.Car;
 import com.example.project.model.Client;
 import com.example.project.repository.CarRepository;
 import com.example.project.repository.ClientRepository;
+
+import java.lang.reflect.Field;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -217,7 +220,36 @@ class ClientServiceTest {
 
         assertThrows(ResourceNotFoundException.class, () -> clientService.deleteInterestedCar(carId, clientId));
     }
+    @Test
+    @SuppressWarnings("unchecked")
+    void testFindUserById_WhenCached() throws Exception {
+        Long id = 1L;
+        GetClientDTO dto = GetClientDTO.builder().id(id).name("Cached").build();
 
+        Field field = ClientServiceImpl.class.getDeclaredField("clientCache");
+        field.setAccessible(true);
+
+        MyCache<Long, GetClientDTO> cache = (MyCache<Long, GetClientDTO>) field.get(clientService);
+        cache.put(id, dto);
+
+        GetClientDTO result = clientService.findUserById(id);
+        assertEquals(dto, result);
+    }
+    @Test
+    void testUpdateUser_ThrowsIfNotFound() {
+        Client client = Client.builder().id(42L).name("Ghost").build();
+        when(clientRepository.findById(client.getId())).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> clientService.updateUser(client));
+    }
+
+    @Test
+    void testDeleteUser_ThrowsIfNotFound() {
+        Long id = 100L;
+        when(clientRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> clientService.deleteUser(id));
+    }
 
 
 }

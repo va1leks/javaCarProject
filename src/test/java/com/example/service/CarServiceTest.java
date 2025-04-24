@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.project.cache.MyCache;
 import com.example.project.constant.CarStatus;
 import com.example.project.constant.EngineType;
 import com.example.project.constant.Transmission;
@@ -15,6 +16,9 @@ import com.example.project.repository.DealershipRepository;
 import com.example.project.service.impl.CarServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.lang.reflect.Field;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,6 +30,7 @@ class CarServiceTest {
     private CarMapper carMapper;
     private DealershipRepository dealershipRepository;
     private CarServiceImpl carService;
+
 
     private Car car;
     private CarDTO carDTO;
@@ -294,6 +299,92 @@ class CarServiceTest {
 
         assertEquals(2, result.size());
     }
+
+
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void testGetCarsByDealershipName_CacheHit() throws Exception {
+        GetDealershipDTO dealership = new GetDealershipDTO();
+        dealership.setName("TestDealer");
+
+        GetCarDTO cachedCar = new GetCarDTO();
+        cachedCar.setId(1L);
+        cachedCar.setDealershipId(dealership);
+
+        Field cacheField = CarServiceImpl.class.getDeclaredField("carCache");
+        cacheField.setAccessible(true);
+        MyCache<Long, GetCarDTO> cache = (MyCache<Long, GetCarDTO>) cacheField.get(carService);
+        cache.put(1L, cachedCar);
+
+        List<GetCarDTO> result = carService.getCarsByDealershipName("TestDealer");
+        assertEquals(1, result.size());
+    }
+
+
+    @Test
+    void testGetCarsByDealership_CacheMissAndRepositoryReturns() {
+        Car car = new Car();
+        car.setId(1L);
+        GetCarDTO carDTO = new GetCarDTO();
+        carDTO.setId(1L);
+        GetDealershipDTO dealership = new GetDealershipDTO();
+        dealership.setId(1L);
+        carDTO.setDealershipId(dealership);
+
+        when(carRepository.findByDealershipId(1L)).thenReturn(List.of(car));
+        when(carMapper.toDtos(anyList())).thenReturn(List.of(carDTO));
+
+        List<GetCarDTO> result = carService.getCarsByDealership(1L);
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void testGetCarsByDealership_EmptyResult_ShouldThrow404() {
+        when(carRepository.findByDealershipId(99L)).thenReturn(List.of());
+        when(carMapper.toDtos(anyList())).thenReturn(List.of());
+
+        assertThrows(ResponseStatusException.class, () -> carService.getCarsByDealership(99L));
+    }
+
+    @Test
+    void testGetCarsByDealershipNameCacheMissAndRepositoryReturns() {
+        Car car = new Car();
+        car.setId(1L);
+        GetCarDTO carDTO = new GetCarDTO();
+        carDTO.setId(1L);
+        GetDealershipDTO dealership = new GetDealershipDTO();
+        dealership.setName("BestDealer");
+        carDTO.setDealershipId(dealership);
+
+        when(carRepository.findByDealershipName("BestDealer")).thenReturn(List.of(car));
+        when(carMapper.toDtos(anyList())).thenReturn(List.of(carDTO));
+
+        List<GetCarDTO> result = carService.getCarsByDealershipName("BestDealer");
+        assertEquals(1, result.size());
+    }
+    @Test
+    void testGetCarsByDealershipNameEmptyResultShouldThrow404() {
+        when(carRepository.findByDealershipName("Unknown")).thenReturn(List.of());
+        when(carMapper.toDtos(anyList())).thenReturn(List.of());
+
+        assertThrows(ResponseStatusException.class, () -> carService.getCarsByDealershipName("Unknown"));
+    }
+    @Test
+    void testPatchCarWithNullFieldsDoesNotOverwrite() {
+        PatchCarDTO patch = new PatchCarDTO();
+
+        when(carRepository.findById(1L)).thenReturn(Optional.of(car));
+        when(carRepository.save(car)).thenReturn(car);
+        when(carMapper.toDto(car)).thenReturn(getCarDTO);
+
+        GetCarDTO result = carService.patchCar(patch, 1L);
+
+        assertEquals(getCarDTO.getId(), result.getId());
+        verify(carRepository).save(car);
+    }
+
+
 
 }
 

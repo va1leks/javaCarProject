@@ -77,7 +77,7 @@ public class CarServiceImpl implements CarService {
 
         if (cars.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "No cars found for dealership: " + dealershipName);
+                    "No cars found for dealership: %s".formatted(dealershipName));
         }
 
         return cars;
@@ -186,4 +186,6 @@ public class CarServiceImpl implements CarService {
                 .map(carMapper::toDto)
                 .toList();
     }
+
+
 }
