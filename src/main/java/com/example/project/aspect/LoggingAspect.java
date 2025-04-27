@@ -1,4 +1,4 @@
-package com.example.project.logging;
+package com.example.project.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
