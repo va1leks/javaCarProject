@@ -14,9 +14,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 
+@Slf4j
 @AllArgsConstructor
 @Component
 public class CarMapper {
@@ -63,6 +65,7 @@ public class CarMapper {
         }
         if (carDTO.getDealershipName() != null) {
             carBuilder.dealership(dealershipRepository.findByName(carDTO.getDealershipName()));
+
         }
 
 

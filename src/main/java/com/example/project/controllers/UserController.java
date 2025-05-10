@@ -96,7 +96,7 @@ public class UserController {
         return userService.deleteInterestedCar(carId, userId);
     }
 
-    @GetMapping("/info")
+    @GetMapping("/profile")
     public Optional<User> getUserInfo(Principal principal) {
         return userService.findUserByPhone(principal.getName());
     }

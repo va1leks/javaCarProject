@@ -127,7 +127,7 @@ public class CarServiceImpl implements CarService {
         carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
                 String.format(ErrorMessages.CAR_NOT_FOUND, id)));
 
-
+        log.info("===================="+car.getDealershipName());
         Car SaveCar = carMapper.toEntityFromUpdateCarDTO(car);
         SaveCar.setId(id);
         carRepository.save(SaveCar);
