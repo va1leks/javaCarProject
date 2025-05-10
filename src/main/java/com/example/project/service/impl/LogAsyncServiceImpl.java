@@ -27,7 +27,7 @@ public class LogAsyncServiceImpl {
                                                   Map<UUID, LogTaskStatus> taskStatuses,
                                                   Map<UUID, Path> taskFiles,
                                                   DateTimeFormatter dateFormat) {
-        Thread.sleep(5000);
+        Thread.sleep(20000);
         try {
             LocalDate targetDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
             String datePrefix = targetDate.format(dateFormat);

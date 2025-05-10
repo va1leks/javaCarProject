@@ -1,14 +1,18 @@
 package com.example.project.controllers;
 
-import com.example.project.dto.create.ClientDTO;
-import com.example.project.dto.get.GetClientDTO;
-import com.example.project.model.Client;
-import com.example.project.service.ClientService;
+import com.example.project.dto.create.UserDTO;
+import com.example.project.dto.get.GetUserDTO;
+import com.example.project.model.User;
+import com.example.project.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +29,14 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @Tag(name = "User Controller", description = "API для управления пользователями")
 public class UserController {
-    private ClientService clientService;
+    private UserService userService;
 
     @GetMapping
     @Operation(summary = "Получить список всех пользователей",
             description = "Возвращает список всех зарегистрированных пользователей")
     @ApiResponse(responseCode = "200", description = "Список пользователей успешно получен")
-    public List<GetClientDTO> findAllUsers() {
-        return clientService.findAllUsers();
+    public List<GetUserDTO> findAllUsers() {
+        return userService.findAllUsers();
     }
 
     @GetMapping("{userId}")
@@ -40,8 +44,8 @@ public class UserController {
             description = "Возвращает информацию о конкретном пользователе по его идентификатору")
     @ApiResponse(responseCode = "200", description = "Пользователь найден")
     @ApiResponse(responseCode = "404", description = "Пользователь не найден")
-    public GetClientDTO findUserById(@PathVariable Long userId) {
-        return clientService.findUserById(userId);
+    public GetUserDTO findUserById(@PathVariable Long userId) {
+        return userService.findUserById(userId);
     }
 
     @PostMapping
@@ -49,8 +53,8 @@ public class UserController {
             description = "Создает нового пользователя")
     @ApiResponse(responseCode = "201", description = "Пользователь успешно создан")
     @ApiResponse(responseCode = "400", description = "Некорректные данные")
-    public Client createUser(@Valid @RequestBody ClientDTO client) {
-        return clientService.saveUser(client);
+    public User createUser(@Valid @RequestBody UserDTO client) {
+        return userService.saveUser(client);
     }
 
 
@@ -59,8 +63,8 @@ public class UserController {
             description = "Обновляет информацию о существующем пользователе")
     @ApiResponse(responseCode = "200", description = "Пользователь успешно обновлен")
     @ApiResponse(responseCode = "404", description = "Пользователь не найден")
-    public GetClientDTO updateUser(@RequestBody Client client) {
-        return clientService.updateUser(client);
+    public GetUserDTO updateUser(@RequestBody User user) {
+        return userService.updateUser(user);
     }
 
     @DeleteMapping("/{id}")
@@ -69,7 +73,7 @@ public class UserController {
     @ApiResponse(responseCode = "204", description = "Пользователь успешно удален")
     @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     public void deleteUser(@PathVariable Long id) {
-        clientService.deleteUser(id);
+        userService.deleteUser(id);
     }
 
     @PatchMapping("addCar/{carId}")
@@ -78,8 +82,8 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "Машина успешно добавлена в список интересов")
     @ApiResponse(responseCode = "400", description = "Некорректные данные")
     @ApiResponse(responseCode = "404", description = "Пользователь или машина не найдены")
-    public GetClientDTO addInterestedCar(@PathVariable Long carId, @RequestBody Long userId) {
-        return clientService.addInterestedCar(carId, userId);
+    public GetUserDTO addInterestedCar(@PathVariable Long carId, Principal principal) {
+        return userService.addInterestedCar(carId, userService.findUserByPhone(principal.getName()).get().getId());
     }
 
     @DeleteMapping("delCar/{carId}")
@@ -88,7 +92,17 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "Машина успешно удалена из списка интересов")
     @ApiResponse(responseCode = "400", description = "Некорректные данные")
     @ApiResponse(responseCode = "404", description = "Пользователь или машина не найдены")
-    public GetClientDTO deleteInterestedCar(@PathVariable Long carId, @RequestBody Long userId) {
-        return clientService.deleteInterestedCar(carId, userId);
+    public GetUserDTO deleteInterestedCar(@PathVariable Long carId, @RequestBody Long userId) {
+        return userService.deleteInterestedCar(carId, userId);
+    }
+
+    @GetMapping("/info")
+    public Optional<User> getUserInfo(Principal principal) {
+        return userService.findUserByPhone(principal.getName());
+    }
+
+    @GetMapping("/admin")
+    public String getUserIasd(Principal principal) {
+        return principal.toString()+"admin!!!!!!!!!!!!!!!!!!!!";
     }
 }

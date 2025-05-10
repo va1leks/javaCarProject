@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
-public class GetClientDTO {
+public class GetUserDTO {
     private Long id;
     private String name;
     private String phone;
-    private Set<Long> interestedCars;
+    private Set<GetCarDTO> interestedCars;
 }

@@ -3,15 +3,19 @@ package com.example.project.service.impl;
 import com.example.project.cache.MyCache;
 import com.example.project.dto.create.CarDTO;
 import com.example.project.dto.get.GetCarDTO;
-import com.example.project.dto.patch.PatchCarDTO;
+import com.example.project.dto.patch.UpdateCarDto;
 import com.example.project.exception.ErrorMessages;
 import com.example.project.exception.ResourceNotFoundException;
+import com.example.project.exception.ValidError;
 import com.example.project.mappers.CarMapper;
 import com.example.project.model.Car;
 import com.example.project.repository.CarRepository;
 import com.example.project.repository.DealershipRepository;
 import com.example.project.service.CarService;
 import jakarta.transaction.Transactional;
+
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -20,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
 import org.springframework.web.server.ResponseStatusException;
 
 
@@ -85,7 +90,7 @@ public class CarServiceImpl implements CarService {
         if (carCache.containsKey(id)) {
             return carCache.get(id);
         }
-        GetCarDTO carDto = carMapper.toDto(carRepository.findById(id)
+        GetCarDTO carDto = carMapper.toGetDto(carRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format(ErrorMessages.CAR_NOT_FOUND, id))));
         carCache.put(id, carDto);
@@ -98,10 +103,18 @@ public class CarServiceImpl implements CarService {
         return carMapper.toDtos(carRepository.findAll());
     }
 
+    @SneakyThrows
     @Override
     @Transactional
     public GetCarDTO saveCar(CarDTO carDto) {
-        GetCarDTO savedCar = carMapper.toDto(carRepository
+        if(carRepository.findByVin(carDto.getVin())!=null){
+            Map<String, String> errors = new HashMap<>();
+            errors.put("vin", "Car with this VIN already exists");
+
+            // Выбрасываем кастомное исключение с ошибками и статусом 400
+            throw new ValidError(HttpStatus.BAD_REQUEST, errors);
+        }
+        GetCarDTO savedCar = carMapper.toGetDto(carRepository
                 .save(carMapper.toEntity(carDto, dealershipRepository)));
         carCache.put(savedCar.getId(), savedCar);
         return savedCar;
@@ -110,18 +123,22 @@ public class CarServiceImpl implements CarService {
     @SneakyThrows
     @Override
     @Transactional
-    public GetCarDTO updateCar(Car car) {
-        carRepository.findById(car.getId()).orElseThrow(() -> new ResourceNotFoundException(
-                String.format(ErrorMessages.CAR_NOT_FOUND, car.getId())));
-        GetCarDTO updatedCar = carMapper.toDto(carRepository.save(car));
-        carCache.put(updatedCar.getId(), updatedCar);
-        return updatedCar;
+    public GetCarDTO updateCar(UpdateCarDto car,Long id) {
+        carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
+                String.format(ErrorMessages.CAR_NOT_FOUND, id)));
+
+
+        Car SaveCar = carMapper.toEntityFromUpdateCarDTO(car);
+        SaveCar.setId(id);
+        carRepository.save(SaveCar);
+        carCache.put(id,carMapper.toGetDto(SaveCar));
+        return carMapper.toGetDto(SaveCar);
     }
 
     @Override
     @Transactional
     @SneakyThrows
-    public GetCarDTO patchCar(PatchCarDTO patchCarDto, Long id) {
+    public GetCarDTO patchCar(UpdateCarDto patchCarDto, Long id) {
         Car car = carRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         String.format(ErrorMessages.CAR_NOT_FOUND, id)));
@@ -155,7 +172,7 @@ public class CarServiceImpl implements CarService {
         if (patchCarDto.getEngineType() != null) {
             car.setEngineType(patchCarDto.getEngineType());
         }
-        GetCarDTO patchedCar = carMapper.toDto(carRepository.save(car));
+        GetCarDTO patchedCar = carMapper.toGetDto(carRepository.save(car));
         carCache.put(patchedCar.getId(), patchedCar);
         return patchedCar;
     }
@@ -178,7 +195,7 @@ public class CarServiceImpl implements CarService {
         return carDtos.stream()
                 .map(dto -> carMapper.toEntity(dto, dealershipRepository))
                 .map(carRepository::save)
-                .map(carMapper::toDto)
+                .map(carMapper::toGetDto)
                 .toList();
     }
 

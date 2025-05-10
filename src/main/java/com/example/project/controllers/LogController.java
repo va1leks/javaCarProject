@@ -8,6 +8,7 @@ import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,7 @@ public class LogController {
     }
 
     @GetMapping("/file/{taskId}")
-    public ResponseEntity<Resource> downloadLogFile(@PathVariable UUID taskId) {
+    public ResponseEntity<?> downloadLogFile(@PathVariable UUID taskId) {
         try {
             Resource resource = logService.getLogFile(taskId);
             return ResponseEntity.ok()
@@ -43,7 +44,9 @@ public class LogController {
                     .contentType(MediaType.TEXT_PLAIN)
                     .body(resource);
         } catch (IOException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .body("Файл логов не найден для taskId: " + taskId);
         }
     }
 }

@@ -11,7 +11,6 @@
 {"id":11,"brand":"Dodge","model":"Ram 3500","year":1996,"price":17740.03,"mileage":452967,"vin":"WAUBFAFL6BA522933","status":"RESERVED","transmission":"MANUAL","color":"Goldenrod","engineType":"DIESEL"},
 {"id":12,"brand":"Suzuki","model":"Swift","year":1993,"price":71494.71,"mileage":78565,"vin":"WBAEJ13432A332970","status":"RESERVED","transmission":"AUTOMATIC","color":"Orange","engineType":"PETROL"},
 {"id":13,"brand":"Mercedes-Benz","model":"SLR McLaren","year":2006,"price":15368.83,"mileage":103935,"vin":"5TDDK3DC4FS303791","status":"RESERVED","transmission":"MANUAL","color":"Mauv","engineType":"PETROL"},
-{"id":14,"brand":"Kia","model":"Sportage","year":2002,"price":2527.63,"mileage":292798,"vin":"1G4HP57M69U178839","status":"RESERVED","transmission":"AUTOMATIC","color":"Turquoise","engineType":"HYBRID"},
 {"id":15,"brand":"Lincoln","model":"MKT","year":2011,"price":2243.42,"mileage":186900,"vin":"WBA3B9C55DJ498650","status":"SOLD","transmission":"AUTOMATIC","color":"Indigo","engineType":"HYBRID"},
 {"id":16,"brand":"Kia","model":"Rio","year":2003,"price":97510.0,"mileage":238149,"vin":"KNADM4A39C6332474","status":"AVAILABLE","transmission":"MANUAL","color":"Mauv","engineType":"DIESEL"},
 {"id":17,"brand":"Mazda","model":"MPV","year":1995,"price":61332.6,"mileage":222955,"vin":"WUARL48H89K255600","status":"RESERVED","transmission":"MANUAL","color":"Aquamarine","engineType":"DIESEL"},

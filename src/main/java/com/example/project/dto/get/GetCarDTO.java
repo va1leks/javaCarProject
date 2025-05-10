@@ -26,6 +26,6 @@ public class GetCarDTO {
     private Transmission transmission;
     private String color;
     private EngineType engineType;
-    private List<GetClientDTO> interestedClients;
+    private List<Long> interestedUsers;
     private GetDealershipDTO dealershipId;
 }

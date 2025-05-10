@@ -45,12 +45,12 @@ public class Car {
     private EngineType engineType;
 
     @JoinTable(
-            name = "client_car",
+            name = "user_car",
             joinColumns = @JoinColumn(name = "car_id"),
-            inverseJoinColumns = @JoinColumn(name = "client_id")
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<Client> interestedClients;
+    private List<User> interestedUsers;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dealership_id")

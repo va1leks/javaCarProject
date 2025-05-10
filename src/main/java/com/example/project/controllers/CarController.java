@@ -2,9 +2,9 @@ package com.example.project.controllers;
 
 import com.example.project.dto.create.CarDTO;
 import com.example.project.dto.get.GetCarDTO;
-import com.example.project.dto.patch.PatchCarDTO;
-import com.example.project.model.Car;
+import com.example.project.dto.patch.UpdateCarDto;
 import com.example.project.service.CarService;
+import com.example.project.service.impl.CarServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class CarController {
 
+    private final CarServiceImpl carServiceImpl;
     private CarService carService;
 
     @GetMapping("{id}")
@@ -57,14 +57,18 @@ public class CarController {
         return carService.saveCar(car);
     }
 
-    @PutMapping("updateCar")
+
+
+
+    @PutMapping("updateCar/{id}")
     @Operation(summary = "Обновить информацию о машине",
             description = "Полностью обновляет информацию о машине")
     @ApiResponse(responseCode = "200", description = "Машина успешно обновлена")
     @ApiResponse(responseCode = "404", description = "Машина не найдена")
-    public GetCarDTO updateCar(@RequestBody Car car) {
-        return carService.updateCar(car);
+    public GetCarDTO updateCar(@RequestBody UpdateCarDto car, @PathVariable Long id) {
+        return carServiceImpl.updateCar(car,id);
     }
+
 
     @DeleteMapping("/{carId}")
     @Operation(summary = "Удалить машину",
@@ -76,16 +80,7 @@ public class CarController {
         return ResponseEntity.ok("Машина с ID " + carId + " успешно удалена");
     }
 
-    @PatchMapping("/{id}")
-    @Operation(summary = "Обновить часть данных о машине",
-            description = "Частично обновляет информацию о машине по ID")
-    @ApiResponse(responseCode = "200", description = "Машина успешно обновлена")
-    @ApiResponse(responseCode = "400", description = "Некорректные данные")
-    @ApiResponse(responseCode = "404", description = "Машина не найдена")
-    public GetCarDTO patchCar(@PathVariable Long id,
-                                              @RequestBody PatchCarDTO patchCarDto) {
-        return carService.patchCar(patchCarDto, id);
-    }
+
 
     @GetMapping("/by-dealership/{dealershipId}")
     @Operation(summary = "Получить машины по ID дилерского центра",

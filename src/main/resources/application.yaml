@@ -4,6 +4,10 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+  jwt:
+    secret: asdasdm1jl332hj1424kjqdwiju03kj321ad
+    lifetime: 10m
+
   jpa:
     open-in-view: false
     hibernate:

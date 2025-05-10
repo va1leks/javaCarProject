@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
-public class ClientDTO {
+public class UserDTO {
+    private String password;
     @NotNull
     private String name;
     @NotNull

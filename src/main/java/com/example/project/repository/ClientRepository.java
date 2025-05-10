@@ -1,9 +1,11 @@
 package com.example.project.repository;
 
 
-import com.example.project.model.Client;
+import com.example.project.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ClientRepository extends JpaRepository<Client, Long> {
+import java.util.Optional;
 
+public interface ClientRepository extends JpaRepository<User, Long> {
+    Optional<User> findByPhone(String phone);
 }

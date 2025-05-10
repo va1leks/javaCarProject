@@ -15,7 +15,7 @@ public class VisitCounterService {
     private final ConcurrentHashMap<String, AtomicInteger> visitCounts = new ConcurrentHashMap<>();
 
     public synchronized void incrementVisit(String url) {
-        visitCounts.computeIfAbsent(url, k -> new AtomicInteger(0)).incrementAndGet();
+        visitCounts.computeIfAbsent(url, _ -> new AtomicInteger(0)).incrementAndGet();
         log.info("Visit recorded for URL: {}", url);
     }
 

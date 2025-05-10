@@ -1,11 +1,9 @@
 package com.example.project.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import com.example.project.constant.Roles;
+import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +16,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Client {
+@Table(name = "\"user\"")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -27,8 +26,16 @@ public class Client {
 
     private String phone;
 
+    private String password;
 
-    @ManyToMany(mappedBy = "interestedClients", cascade = {CascadeType.DETACH,
+
+    @ElementCollection(targetClass = Roles.class)
+    @Enumerated(EnumType.STRING)
+    private List<Roles> roles;
+
+
+    @ManyToMany(mappedBy = "interestedUsers", cascade = {CascadeType.DETACH,
         CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+
     private Set<Car> interestedCars;
 }

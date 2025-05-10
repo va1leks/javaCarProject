@@ -32,4 +32,5 @@ public class Dealership {
     @OneToMany(mappedBy = "dealership", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Car> cars;
+
 }
