@@ -18,7 +18,7 @@ services:
       dockerfile: Dockerfile
     container_name: springboot-app
     environment:
-      DB_URL: jdbc:postgresql://dpg-d013s6hrbfns7393dhvg-a:5432/car_db_whyz
+      DB_URL: jdbc:postgresql://postgres:5432/car_db_whyz
       DB_USERNAME: user
       DB_PASSWORD: pass
     ports:
