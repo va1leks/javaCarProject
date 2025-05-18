@@ -4,7 +4,7 @@ services:
     container_name: pg
     restart: always
     environment:
-      POSTGRES_DB: car_db
+      POSTGRES_DB: car_db_whyz
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
     ports:
@@ -17,8 +17,10 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: springboot-app
-
-
+    environment:
+      DB_URL: jdbc:postgresql://dpg-d013s6hrbfns7393dhvg-a:5432/car_db_whyz
+      DB_USERNAME: user
+      DB_PASSWORD: pass
     ports:
       - "8080:8080"
     depends_on:
