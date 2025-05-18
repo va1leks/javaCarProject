@@ -7,7 +7,6 @@ services:
       POSTGRES_DB: car_db
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
-      DB_URL: jdbc:postgresql://postgres:5432/car_db
     ports:
       - "5432:5432"
     volumes:
@@ -19,6 +18,7 @@ services:
       dockerfile: Dockerfile
     container_name: springboot-app
     environment:
+      DB_URL: jdbc:postgresql://postgres:5432/car_db
       DB_USERNAME: user
       DB_PASSWORD: pass
     ports:
