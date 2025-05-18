@@ -17,10 +17,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: springboot-app
-    environment:
-      DB_URL: jdbc:postgresql://postgres:5432/car_db
-      DB_USERNAME: user
-      DB_PASSWORD: pass
+
+
     ports:
       - "8080:8080"
     depends_on:
