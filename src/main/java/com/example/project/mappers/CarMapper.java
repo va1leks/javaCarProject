@@ -2,8 +2,6 @@ package com.example.project.mappers;
 
 import com.example.project.dto.create.CarDTO;
 import com.example.project.dto.get.GetCarDTO;
-import com.example.project.dto.get.GetUserDTO;
-import com.example.project.dto.get.GetDealershipDTO;
 import com.example.project.dto.patch.UpdateCarDto;
 import com.example.project.model.Car;
 import com.example.project.model.User;
@@ -11,6 +9,7 @@ import com.example.project.model.Dealership;
 import com.example.project.repository.DealershipRepository;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
@@ -28,7 +27,7 @@ public class CarMapper {
 
     public Car toEntityFromUpdateCarDTO(UpdateCarDto carDTO) {
         if (carDTO == null) {
-            return null; // Возвращаем null, если входной объект пуст
+            return null;
         }
 
         Car.CarBuilder carBuilder = Car.builder();
@@ -91,6 +90,24 @@ public class CarMapper {
                 .build();
     }
 
+    public GetCarDTO toGetDto(Optional<Car> car) {
+        return GetCarDTO.builder()
+                .dealershipId(dealershipMapper.toDto(car.get().getDealership()))
+                .interestedUsers(this.mapClientsToDto(car.get().getInterestedUsers()))
+                .id(car.get().getId())
+                .model(car.get().getModel())
+                .brand(car.get().getBrand())
+                .color(car.get().getColor())
+                .price(car.get().getPrice())
+                .vin(car.get().getVin())
+                .year(car.get().getYear())
+                .mileage(car.get().getMileage())
+                .engineType(car.get().getEngineType())
+                .status(car.get().getStatus())
+                .transmission(car.get().getTransmission())
+                .build();
+    }
+
     public List<GetCarDTO> toDtos(List<Car> cars) {
         if (cars == null || cars.isEmpty()) {
             return Collections.emptyList();
@@ -128,12 +145,9 @@ public class CarMapper {
         car.setColor(carDto.getColor());
         car.setEngineType(carDto.getEngineType());
 
-        if (carDto.getDealership() != null) {
-            Dealership dealership = dealershipRepository.findByName(carDto.getDealership());
-
-            if (dealership != null) {
+        if (carDto.getDealershipName() != null) {
+            Dealership dealership = dealershipRepository.findByName(carDto.getDealershipName());
                 car.setDealership(dealership);
-            }
         }
                 return car;
     }

@@ -2,6 +2,9 @@ package com.example.project.controllers;
 
 import com.example.project.dto.create.UserDTO;
 import com.example.project.dto.get.GetUserDTO;
+import com.example.project.dto.patch.UpdateCarDto;
+import com.example.project.dto.patch.UpdateUserDto;
+import com.example.project.mappers.UserMapper;
 import com.example.project.model.User;
 import com.example.project.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @Tag(name = "User Controller", description = "API для управления пользователями")
 public class UserController {
+    private final UserMapper userMapper;
     private UserService userService;
 
     @GetMapping
@@ -48,24 +53,15 @@ public class UserController {
         return userService.findUserById(userId);
     }
 
-    @PostMapping
-    @Operation(summary = "Создать пользователя",
-            description = "Создает нового пользователя")
-    @ApiResponse(responseCode = "201", description = "Пользователь успешно создан")
-    @ApiResponse(responseCode = "400", description = "Некорректные данные")
-    public User createUser(@Valid @RequestBody UserDTO client) {
-        return userService.saveUser(client);
-    }
-
-
-    @PutMapping("update")
+    @PutMapping("{id}")
     @Operation(summary = "Обновить информацию о пользователе",
-            description = "Обновляет информацию о существующем пользователе")
+            description = "Обновляет информацию о существующем пользователе по его ID")
     @ApiResponse(responseCode = "200", description = "Пользователь успешно обновлен")
     @ApiResponse(responseCode = "404", description = "Пользователь не найден")
-    public GetUserDTO updateUser(@RequestBody User user) {
-        return userService.updateUser(user);
+    public GetUserDTO updateUser(@PathVariable Long id, @RequestBody UpdateUserDto user) {
+        return userService.updateUser(user,id);
     }
+
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить пользователя",
@@ -82,8 +78,9 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "Машина успешно добавлена в список интересов")
     @ApiResponse(responseCode = "400", description = "Некорректные данные")
     @ApiResponse(responseCode = "404", description = "Пользователь или машина не найдены")
-    public GetUserDTO addInterestedCar(@PathVariable Long carId, Principal principal) {
-        return userService.addInterestedCar(carId, userService.findUserByPhone(principal.getName()).get().getId());
+    public GetUserDTO addInterestedCar(@PathVariable Long carId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userService.addInterestedCar(carId, userService.findUserByPhone(username).get().getId());
     }
 
     @DeleteMapping("delCar/{carId}")
@@ -92,13 +89,13 @@ public class UserController {
     @ApiResponse(responseCode = "200", description = "Машина успешно удалена из списка интересов")
     @ApiResponse(responseCode = "400", description = "Некорректные данные")
     @ApiResponse(responseCode = "404", description = "Пользователь или машина не найдены")
-    public GetUserDTO deleteInterestedCar(@PathVariable Long carId, @RequestBody Long userId) {
-        return userService.deleteInterestedCar(carId, userId);
+    public GetUserDTO deleteInterestedCar(@PathVariable Long carId,Principal principal) {
+        return userService.deleteInterestedCar(carId, userService.findUserByPhone(principal.getName()).get().getId());
     }
 
     @GetMapping("/profile")
-    public Optional<User> getUserInfo(Principal principal) {
-        return userService.findUserByPhone(principal.getName());
+    public GetUserDTO getUserInfo(Principal principal) {
+        return userService.getUserByPhone(principal.getName());
     }
 
     @GetMapping("/admin")

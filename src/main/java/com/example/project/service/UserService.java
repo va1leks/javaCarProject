@@ -3,6 +3,8 @@ package com.example.project.service;
 
 import com.example.project.dto.create.UserDTO;
 import com.example.project.dto.get.GetUserDTO;
+import com.example.project.dto.patch.UpdateCarDto;
+import com.example.project.dto.patch.UpdateUserDto;
 import com.example.project.model.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -17,7 +19,7 @@ public interface UserService extends UserDetailsService {
 
     User saveUser(UserDTO client);
 
-    GetUserDTO updateUser(User user);
+    GetUserDTO updateUser(UpdateUserDto user, Long id);
 
     void deleteUser(Long id);
 
@@ -26,4 +28,6 @@ public interface UserService extends UserDetailsService {
     GetUserDTO deleteInterestedCar(Long carId, Long userId);
 
     Optional<User> findUserByPhone(String phone);
+
+    public GetUserDTO getUserByPhone(String phone);
 }

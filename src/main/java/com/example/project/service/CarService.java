@@ -25,4 +25,8 @@ public interface CarService {
     void deleteCar(Long carId);
 
     List<GetCarDTO> getCarsByDealership(Long dealershipId);
+
+    public void removeCarFromCache(Long carId);
+
+    public void addCarFromCache(GetCarDTO carDTO);
 }

@@ -5,6 +5,8 @@ import com.example.project.constant.Roles;
 import com.example.project.dto.create.RegistrationUserDto;
 import com.example.project.dto.create.UserDTO;
 import com.example.project.dto.get.GetUserDTO;
+import com.example.project.dto.patch.UpdateCarDto;
+import com.example.project.dto.patch.UpdateUserDto;
 import com.example.project.exception.ConflictException;
 import com.example.project.exception.ErrorMessages;
 import com.example.project.exception.ResourceNotFoundException;
@@ -84,11 +86,12 @@ public class UserServiceImpl implements UserService {
     @SneakyThrows
     @Override
     @Transactional
-    public GetUserDTO updateUser(User user) {
-        userRepository.findById(user.getId()).orElseThrow(()
+    public GetUserDTO updateUser(UpdateUserDto user, Long id) {
+         userRepository.findById(id).orElseThrow(()
                 -> new ResourceNotFoundException(
-                String.format(ErrorMessages.USER_NOT_FOUND, user.getId())));
-        GetUserDTO updatedClient = userMapper.toDto(userRepository.save(user));
+                String.format(ErrorMessages.USER_NOT_FOUND, id)));
+
+        GetUserDTO updatedClient = userMapper.toDto(userRepository.save(userMapper.toUserFronUpdate(user,userRepository)));
         clientCache.put(updatedClient.getId(), updatedClient);
         return updatedClient;
     }
@@ -148,6 +151,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public GetUserDTO getUserByPhone(String phone) {
+        return userMapper.toDto(userRepository.getByPhone(phone));
+    }
+
+    @Override
     public Optional<User> findUserByPhone(String phone) {
         return userRepository.findByPhone(phone);
     }
@@ -171,7 +179,7 @@ public class UserServiceImpl implements UserService {
         newUser.setPhone(registrationUserDto.getPhone());
         newUser.setPassword(passwordEncoder.encode(registrationUserDto.getPassword()));
         newUser.setName(registrationUserDto.getName());
-        newUser.setRoles(List.of(Roles.ADMIN));
+        newUser.setRoles(List.of(Roles.USER));
         userRepository.save(newUser);
         return newUser;
     }

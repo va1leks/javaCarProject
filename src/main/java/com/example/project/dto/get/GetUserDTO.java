@@ -1,6 +1,9 @@
 package com.example.project.dto.get;
 
+import java.util.List;
 import java.util.Set;
+
+import com.example.project.constant.Roles;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,4 +19,5 @@ public class GetUserDTO {
     private String name;
     private String phone;
     private Set<GetCarDTO> interestedCars;
+    private List<Roles> roles;
 }

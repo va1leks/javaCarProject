@@ -22,13 +22,12 @@ public class AuthController {
 
     @PostMapping("/auth")
     public ResponseEntity<?> createAuthToken (@RequestBody JwtRequest jwtRequest) {
-
+        log.info("=-=-=-=-=-=-=-=-===============-=-=-= {}", jwtRequest.toString());
         return  authServise.Login(jwtRequest);
     }
 
     @PostMapping("/registration")
     public ResponseEntity<?> registerUser (@RequestBody RegistrationUserDto registrationUserDto) {
-        authServise.Register(registrationUserDto);
-        return ResponseEntity.ok(userService.createNewUser(registrationUserDto));
+        return ResponseEntity.ok(authServise.Register(registrationUserDto));
     }
 }

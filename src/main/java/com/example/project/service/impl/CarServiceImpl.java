@@ -40,6 +40,20 @@ public class CarServiceImpl implements CarService {
     private final MyCache<Long, GetCarDTO> carCache = new MyCache<>(60000, 500);
 
     @Override
+    public void removeCarFromCache(Long carId) {
+        if (carCache.containsKey(carId)) {
+            log.info("Removing car with ID {} from cache", carId);
+            carCache.remove(carId);
+        }
+    }
+
+    @Override
+    public void addCarFromCache(GetCarDTO carDTO) {
+            log.info("add car with ID {} from cache", carDTO.getId());
+            carCache.put(carDTO.getId(),carDTO);
+    }
+
+    @Override
     @Transactional
     public List<GetCarDTO> getCarsByDealership(Long dealershipId) {
         List<GetCarDTO>  cars = carCache.getCache().values().stream()
@@ -47,16 +61,17 @@ public class CarServiceImpl implements CarService {
                         && dealershipId.equals(car.getDealershipId().getId()))
                 .collect(Collectors.toList());
 
-        if (!cars.isEmpty()) {
+        if (!cars.isEmpty() && (cars.size() == carRepository.findByDealershipId(dealershipId).size())) {
             log.info("Cache hit for Dealership ID: {}", dealershipId);
             return cars;
         }
         cars = carMapper.toDtos(carRepository.findByDealershipId(dealershipId));
+        if (cars.isEmpty()) {
+            return null;
+        }
         cars.forEach(car -> carCache.put(car.getId(), car));
 
-        if (cars.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+
         return cars;
     }
 
@@ -110,8 +125,6 @@ public class CarServiceImpl implements CarService {
         if(carRepository.findByVin(carDto.getVin())!=null){
             Map<String, String> errors = new HashMap<>();
             errors.put("vin", "Car with this VIN already exists");
-
-            // Выбрасываем кастомное исключение с ошибками и статусом 400
             throw new ValidError(HttpStatus.BAD_REQUEST, errors);
         }
         GetCarDTO savedCar = carMapper.toGetDto(carRepository
@@ -126,8 +139,12 @@ public class CarServiceImpl implements CarService {
     public GetCarDTO updateCar(UpdateCarDto car,Long id) {
         carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
                 String.format(ErrorMessages.CAR_NOT_FOUND, id)));
-
-        log.info("===================="+car.getDealershipName());
+        if((carRepository.findByVin(car.getVin()) != null) &&
+                !carRepository.findById(id).get().getVin().equals(car.getVin())){
+            Map<String, String> errors = new HashMap<>();
+            errors.put("vin", "Car with this VIN already exists");
+            throw new ValidError(HttpStatus.BAD_REQUEST, errors);
+        }
         Car SaveCar = carMapper.toEntityFromUpdateCarDTO(car);
         SaveCar.setId(id);
         carRepository.save(SaveCar);

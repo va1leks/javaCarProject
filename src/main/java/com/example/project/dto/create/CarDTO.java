@@ -54,5 +54,5 @@ public class CarDTO {
     private EngineType engineType;
 
     @Nullable
-    private String dealership;
+    private String dealershipName;
 }

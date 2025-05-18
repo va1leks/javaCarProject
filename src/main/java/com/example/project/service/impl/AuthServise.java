@@ -43,7 +43,6 @@ public class AuthServise {
         UserDetails userDetails = userService.loadUserByUsername(jwtRequest.getPhone());
         String token = jwtTokenUtils.generateToken(userDetails);
 
-        // Создаем объект для ответа с токеном
         Map<String, String> response = new HashMap<>();
         response.put("token", token);
 

@@ -2,8 +2,10 @@ package com.example.project.mappers;
 
 import com.example.project.dto.get.GetCarDTO;
 import com.example.project.dto.get.GetUserDTO;
+import com.example.project.dto.patch.UpdateUserDto;
 import com.example.project.model.Car;
 import com.example.project.model.User;
+import com.example.project.repository.ClientRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +23,17 @@ public class UserMapper {
 
     private CarMapper carMapper;
 
+    public Optional<GetUserDTO> toDto(Optional<User> user)
+    {
+        return Optional.ofNullable(GetUserDTO.builder()
+                .id(user.get().getId())
+                .name(user.get().getName())
+                .phone(user.get().getPhone())
+                .interestedCars(mapCarsToGetCars(user.get().getInterestedCars()))
+                .roles(user.get().getRoles())
+                .build());
+    }
+
     public GetUserDTO toDto(User user)
     {
         return GetUserDTO.builder()
@@ -28,6 +41,7 @@ public class UserMapper {
                 .name(user.getName())
                 .phone(user.getPhone())
                 .interestedCars(mapCarsToGetCars(user.getInterestedCars()))
+                .roles(user.getRoles())
                 .build();
     }
 
@@ -52,5 +66,14 @@ public class UserMapper {
                 .collect(Collectors.toSet());  // Собираем в Set<GetCarDTO>
     }
 
+    public User toUserFronUpdate(UpdateUserDto updateUserDto, ClientRepository clientRepository) {
+        return User.builder()
+                .roles(updateUserDto.getRoles())
+                .name(updateUserDto.getName())
+                .id(clientRepository.findByPhone(updateUserDto.getPhone()).get().getId())
+                .password(clientRepository.findByPhone(updateUserDto.getPhone()).get().getPassword())
+                .interestedCars(clientRepository.findByPhone(updateUserDto.getPhone()).get().getInterestedCars())
+                .phone(updateUserDto.getPhone()).build();
+    }
 
 }

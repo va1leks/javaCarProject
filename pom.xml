@@ -189,6 +189,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<jvmArguments>--enable-preview</jvmArguments>
 					<jvmArguments>
 						-javaagent:"${settings.localRepository}/org/mockito/mockito-core/5.17.0/mockito-core-5.17.0.jar"
 					</jvmArguments>

@@ -5,10 +5,9 @@ import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Set;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.stream.Collectors;
+
+import lombok.*;
 
 
 @Entity
@@ -24,6 +23,7 @@ public class User {
 
     private String name;
 
+    @Column(unique = true)
     private String phone;
 
     private String password;
@@ -34,8 +34,10 @@ public class User {
     private List<Roles> roles;
 
 
-    @ManyToMany(mappedBy = "interestedUsers", cascade = {CascadeType.DETACH,
+    @ManyToMany(mappedBy = "interestedUsers",fetch = FetchType.EAGER, cascade = {CascadeType.DETACH,
         CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 
+
     private Set<Car> interestedCars;
+
 }

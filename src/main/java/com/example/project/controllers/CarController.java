@@ -65,7 +65,7 @@ public class CarController {
             description = "Полностью обновляет информацию о машине")
     @ApiResponse(responseCode = "200", description = "Машина успешно обновлена")
     @ApiResponse(responseCode = "404", description = "Машина не найдена")
-    public GetCarDTO updateCar(@RequestBody UpdateCarDto car, @PathVariable Long id) {
+    public GetCarDTO updateCar(@Valid @RequestBody UpdateCarDto car, @PathVariable Long id) {
         return carServiceImpl.updateCar(car,id);
     }
 
