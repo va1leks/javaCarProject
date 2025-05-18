@@ -1,6 +1,6 @@
 spring:
   datasource:
-    #url: jdbc:postgresql://postgres:5432/carDB
+    #url: jdbc:postgresql://postgres:5432/car_db
     url: jdbc:postgresql://localhost:5432/carDB
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
