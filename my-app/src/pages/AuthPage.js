@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 
 const AuthPage = ({ setToken }) => {
     const navigate = useNavigate();
-
+    const API_URL = process.env.REACT_APP_API_URL;
     const onFinish = async (values) => {
         try {
-            const response = await fetch('http://localhost:8080/api/v1/auth', {
+            const response = await fetch(`${API_URL}/auth`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

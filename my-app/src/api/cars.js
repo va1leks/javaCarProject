@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/v1/cars';
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const getCars = async () => {
     const response = await axios.get(API_URL);

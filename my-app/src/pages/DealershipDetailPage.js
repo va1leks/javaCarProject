@@ -16,6 +16,7 @@ const DealershipDetailPage = ({ token, isAdmin }) => {
     const [addModalVisible, setAddModalVisible] = useState(false);
     const [selectedCarId, setSelectedCarId] = useState(null);
     const navigate = useNavigate();
+    const API_URL = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         fetchData();
@@ -24,15 +25,15 @@ const DealershipDetailPage = ({ token, isAdmin }) => {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const dealershipResponse = await fetch(`http://localhost:8080/api/v1/dealerships/${id}`);
+            const dealershipResponse = await fetch(`${API_URL}/dealerships/${id}`);
             const dealershipData = await dealershipResponse.json();
             setDealership(dealershipData);
 
-            const carsResponse = await fetch(`http://localhost:8080/api/v1/cars/by-dealership/${id}`);
+            const carsResponse = await fetch(`${API_URL}/cars/by-dealership/${id}`);
             const carsData = await carsResponse.json();
             setCars(carsData);
 
-            const allCarsResponse = await fetch('http://localhost:8080/api/v1/cars');
+            const allCarsResponse = await fetch(`${API_URL}/cars`);
             const allCarsData = await allCarsResponse.json();
             setAllCars(allCarsData);
         } catch (error) {
@@ -50,7 +51,7 @@ const DealershipDetailPage = ({ token, isAdmin }) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/api/v1/dealerships/addCarToDealership/${id}`, {
+            const response = await fetch(`${API_URL}/dealerships/addCarToDealership/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -74,7 +75,7 @@ const DealershipDetailPage = ({ token, isAdmin }) => {
 
     const handleRemoveCar = async (carId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/v1/dealerships/deleteCarFromDs/${id}`, {
+            const response = await fetch(`${API_URL}/dealerships/deleteCarFromDs/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',

@@ -11,6 +11,7 @@ const CarsPage = ({ isAdmin, token }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editingCar, setEditingCar] = useState(null);
     const [dealerships, setDealerships] = useState([]);
+    const API_URL = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         fetchCars();
@@ -19,7 +20,7 @@ const CarsPage = ({ isAdmin, token }) => {
 
     const fetchDealerships = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/v1/dealerships');
+            const response = await fetch(`${API_URL}/dealerships`);
             const data = await response.json();
             setDealerships(data);
         } catch (error) {
@@ -29,7 +30,7 @@ const CarsPage = ({ isAdmin, token }) => {
 
     const fetchCars = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/v1/cars', {
+            const response = await fetch(`${API_URL}/cars`, {
                 headers: token ? { 'Authorization': `Bearer ${token}` } : {}
             });
             const data = await response.json();
@@ -42,7 +43,7 @@ const CarsPage = ({ isAdmin, token }) => {
 
     const handleDelete = async (id) => {
         try {
-            await fetch(`http://localhost:8080/api/v1/cars/${id}`, {
+            await fetch(`${API_URL}/cars/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -55,7 +56,7 @@ const CarsPage = ({ isAdmin, token }) => {
 
     const handleAddFavorite = async (carId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/v1/users/addCar/${carId}`, {
+            const response = await fetch(`${API_URL}/users/addCar/${carId}`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -92,8 +93,8 @@ const CarsPage = ({ isAdmin, token }) => {
     const handleSubmit = async (values) => {
         try {
             const url = editingCar
-                ? `http://localhost:8080/api/v1/cars/updateCar/${editingCar.id}`
-                : 'http://localhost:8080/api/v1/cars';
+                ? `${API_URL}/cars/updateCar/${editingCar.id}`
+                : `${API_URL}/cars`;
 
             const method = editingCar ? 'PUT' : 'POST';
 

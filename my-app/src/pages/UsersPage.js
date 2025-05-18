@@ -13,6 +13,7 @@ const UsersPage = ({ token, isAdmin }) => {
     const [loading, setLoading] = useState(true);
     const [form] = Form.useForm();
     const navigate = useNavigate();
+    const API_URL = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         if (!isAdmin) {
@@ -25,7 +26,7 @@ const UsersPage = ({ token, isAdmin }) => {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:8080/api/v1/users', {
+            const response = await fetch(`${API_URL}/users`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             const data = await response.json();
@@ -72,7 +73,7 @@ const UsersPage = ({ token, isAdmin }) => {
                 roles: values.roles
             };
 
-            const response = await fetch(`http://localhost:8080/api/v1/users/${updatedUser.id}`, {
+            const response = await fetch(`${API_URL}/users/${updatedUser.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -102,7 +103,7 @@ const UsersPage = ({ token, isAdmin }) => {
             cancelText: 'No',
             onOk: async () => {
                 try {
-                    await fetch(`http://localhost:8080/api/v1/users/${userId}`, {
+                    await fetch(`${API_URL}/users/${userId}`, {
                         method: 'DELETE',
                         headers: {
                             'Authorization': `Bearer ${token}`

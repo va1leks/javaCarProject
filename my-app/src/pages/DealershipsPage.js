@@ -8,6 +8,7 @@ const DealershipsPage = ({ token, isAdmin }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [editingDealership, setEditingDealership] = useState(null);
     const [form] = Form.useForm();
+    const API_URL = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         fetchDealerships();
@@ -15,7 +16,7 @@ const DealershipsPage = ({ token, isAdmin }) => {
 
     const fetchDealerships = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/v1/dealerships');
+            const response = await fetch(`${API_URL}/dealerships`);
             const data = await response.json();
             setDealerships(data);
         } catch (error) {
@@ -26,8 +27,8 @@ const DealershipsPage = ({ token, isAdmin }) => {
     const handleSubmit = async (values) => {
         try {
             const url = editingDealership
-                ? 'http://localhost:8080/api/v1/dealerships'
-                : 'http://localhost:8080/api/v1/dealerships';
+                ? `${API_URL}/dealerships`
+                : `${API_URL}/dealerships`;
 
             const method = editingDealership ? 'PUT' : 'POST';
 
@@ -52,7 +53,7 @@ const DealershipsPage = ({ token, isAdmin }) => {
 
     const handleDelete = async (id) => {
         try {
-            await fetch(`http://localhost:8080/api/v1/dealerships/${id}`, {
+            await fetch(`${API_URL}/dealerships/${id}`, {
                 method: 'DELETE',
                 headers: { 'Authorization': `Bearer ${token}` }
             });

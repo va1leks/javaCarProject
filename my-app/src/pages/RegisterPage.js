@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const RegisterPage = () => {
     const navigate = useNavigate();
+    const API_URL = process.env.REACT_APP_API_URL;
 
     const onFinish = async (values) => {
         try {

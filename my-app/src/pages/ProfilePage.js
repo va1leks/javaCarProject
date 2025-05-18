@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 
 const ProfilePage = ({ token, user }) => {
     const [profile, setProfile] = useState(null);
+    const API_URL = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/v1/users/profile', {
+                const response = await fetch(`${API_URL}/users/profile`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const data = await response.json();
@@ -22,7 +23,7 @@ const ProfilePage = ({ token, user }) => {
 
     const handleRemoveFavorite = async (carId) => {
         try {
-            await fetch(`http://localhost:8080/api/v1/users/delCar/${carId}`, {
+            await fetch(`${API_URL}/users/delCar/${carId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

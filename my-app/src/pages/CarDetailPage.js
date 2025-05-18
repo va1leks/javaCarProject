@@ -21,11 +21,12 @@ const CarDetailPage = ({ token, isAdmin }) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [interestedUsersDetails, setInterestedUsersDetails] = useState([]);
     const navigate = useNavigate();
+    const API_URL = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         const fetchCarDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/v1/cars/${id}`);
+                const response = await fetch(`${API_URL}/cars/${id}`);
                 const data = await response.json();
                 setCar(data);
             } catch (error) {
@@ -45,7 +46,7 @@ const CarDetailPage = ({ token, isAdmin }) => {
                 try {
                     const users = await Promise.all(
                         car.interestedUsers.map(userId =>
-                            fetch(`http://localhost:8080/api/v1/users/${userId}`)
+                            fetch(`${API_URL}/users/${userId}`)
                                 .then(res => res.json())
                         )
                     );
