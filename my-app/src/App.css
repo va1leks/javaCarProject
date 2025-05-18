@@ -1,0 +1,17 @@
+input {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: 1px solid #aaaaaa;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.card {
+  background-color: #1e1e1e;
+  border: 1px solid #888888;
+  border-radius: 5px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.7);
+  margin: 10px 0;
+  color: #ffffff;
+}
