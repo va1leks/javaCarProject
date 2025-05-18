@@ -32,7 +32,6 @@ checkstyle.xml
 /nbdist/
 /.nb-gradle/
 build/
-/my-app/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
