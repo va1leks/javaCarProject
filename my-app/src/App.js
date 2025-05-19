@@ -17,13 +17,14 @@ const { Content } = Layout;
 function App() {
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [user, setUser] = useState(null);
+    const API_URL = process.env.REACT_APP_API_URL;
 
     useEffect(() => {
         if (token) {
             // Загружаем данные пользователя при наличии токена
             const fetchProfile = async () => {
                 try {
-                    const response = await fetch('http://localhost:8080/api/v1/users/profile', {
+                    const response = await fetch(`${API_URL}/users/profile`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
